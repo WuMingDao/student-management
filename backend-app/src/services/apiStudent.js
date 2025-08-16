@@ -1,24 +1,36 @@
+import { faker } from "@faker-js/faker";
 import { supabase } from "../utils/supabase.js";
 
-export async function getStudents() {
-  let { data: student, error } = await supabase.from("student").select("*");
+export function generateStudent() {
+  const classNum = faker.number.int({ min: 1, max: 12 });
+  const grade = faker.number.int({ min: 1, max: 12 });
+  const teacher_id = faker.number.int({ min: 1, max: 12 });
 
-  if (error) {
-    console.log("Error fetching students", error);
-    return;
-  }
-
-  return student;
+  return {
+    name: faker.person.fullName(),
+    class: classNum,
+    grade,
+    teacher_id,
+    gender: faker.person.sex(),
+    avatar: faker.image.avatar(),
+  };
 }
 
-export async function insertStudent() {
+export function generateStudents(count = 5) {
+  return new Array(count).fill("").map(() => generateStudent());
+}
+
+export async function insertStudents(count = 5) {
+  const students = generateStudents(count);
+  console.log("Inserting students:", students);
+
   const { data, error } = await supabase
     .from("student")
-    .insert([{ name: "John Doe", class: 2, grade: 4, gender: "female" }])
+    .insert(students)
     .select();
 
   if (error) {
-    console.log("Error fetching data", error);
+    console.error("Error inserting data:", error);
     return;
   }
 

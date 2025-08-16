@@ -6,9 +6,12 @@ function StudentList() {
   const [studentList, setStudentList] = useState([]);
 
   useEffect(() => {
-    const mockStudentList = getStudentList();
-    setStudentList(mockStudentList);
-    // console.log(mockStudentList);
+    async function fetchData() {
+      const mockStudentList = await getStudentList();
+      setStudentList(mockStudentList);
+    }
+
+    fetchData();
   }, []);
 
   return (

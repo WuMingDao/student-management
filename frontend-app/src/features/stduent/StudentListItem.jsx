@@ -30,11 +30,7 @@ function StudentListItem({ id, studentItem }) {
       </td>
       {/* Class and teacher */}
       <td>
-        {studentItem.class}
-        <br />
-        <span className="badge badge-ghost badge-sm">
-          {studentItem.teacher}
-        </span>
+        class {studentItem.class} | grade {studentItem.grade}
       </td>
       <th>
         <button
