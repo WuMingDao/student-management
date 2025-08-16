@@ -5,11 +5,13 @@ function ScoreListItem({ scoreItem }) {
 
   return (
     <tr>
-      <td>{scoreItem.Name}</td>
-      <td>{scoreItem.Class}</td>
-      <td>{scoreItem.Subject}</td>
-      <td>{scoreItem.Semester}</td>
-      <td>{scoreItem.Score}</td>
+      <td>{scoreItem.student_id}</td>
+      <td>{scoreItem.student_id}</td>
+      <td>{scoreItem.subject}</td>
+      <td>
+        {scoreItem.semesterSeason} {scoreItem.semesterYear}
+      </td>
+      <td>{scoreItem.score}</td>
       <th>
         <button
           className="btn btn-soft btn-info"

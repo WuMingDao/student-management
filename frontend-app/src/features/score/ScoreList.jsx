@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
 import ScoreListItem from "./ScoreListItem";
-import { getScoreList } from "../../services/apiScore";
+import { getScoreList } from "../../services/apiScore.js";
 
 function ScoreList() {
   const [ScoreList, setScoreList] = useState([]);
 
   useEffect(() => {
-    const mockScoreList = getScoreList();
-    setScoreList(mockScoreList);
+    async function fetchData() {
+      const mockScoreList = await getScoreList();
+      setScoreList(mockScoreList);
+    }
+    fetchData();
   }, []);
 
   return (

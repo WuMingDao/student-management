@@ -4,7 +4,7 @@ import { supabase } from "../utils/supabase.js";
 export function generateStudent() {
   const classNum = faker.number.int({ min: 1, max: 12 });
   const grade = faker.number.int({ min: 1, max: 12 });
-  const teacher_id = faker.number.int({ min: 1, max: 12 });
+  const teacher_id = faker.number.int({ min: 1, max: 11 });
 
   return {
     name: faker.person.fullName(),
