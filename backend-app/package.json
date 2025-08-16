@@ -5,13 +5,15 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon server.js"
+    "start": "dotenvx run -- node ./src/server.js",
+    "dev": "dotenvx run -- nodemon ./src/server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.14.0",
   "dependencies": {
-    "@dotenvx/dotenvx": "^1.48.4"
+    "@dotenvx/dotenvx": "^1.48.4",
+    "@supabase/supabase-js": "^2.55.0"
   }
 }
