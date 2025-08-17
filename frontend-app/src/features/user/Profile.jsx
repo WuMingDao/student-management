@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 import { uploadAvatar } from "../../services/apiStorage";
+import { getConfig } from "../../utils/configHepler";
 
 function Profile() {
   const [currentAvatar, setCurrentAvatar] = useState(
@@ -7,6 +8,14 @@ function Profile() {
   );
 
   const [avatarFile, setAvatarFile] = useState(null);
+
+  useEffect(() => {
+    const token = getConfig("SUPABASE_TOKEN");
+    const userToken = JSON.parse(localStorage.getItem(token));
+
+    console.log(userToken.user.user_metadata.avatar);
+    setCurrentAvatar(userToken.user.user_metadata.avatar);
+  }, []);
 
   function handleAvatarChange(event) {
     const file = event.target.files[0];

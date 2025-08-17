@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { signup } from "../../services/apiAuth.js";
+import { useNavigate } from "react-router-dom";
 
 function Signup() {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -57,7 +60,12 @@ function Signup() {
         >
           Sign Up
         </button>
-        <button className="btn btn-soft btn-secondary mx-2 my-2">Login</button>
+        <button
+          className="btn btn-soft btn-secondary mx-2 my-2"
+          onClick={() => navigate("/login")}
+        >
+          Login
+        </button>
       </div>
     </fieldset>
   );

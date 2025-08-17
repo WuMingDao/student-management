@@ -1,9 +1,17 @@
+import { getConfig } from "../utils/configHepler";
 import { supabase } from "../utils/supabase";
 
 export async function signup(email, password) {
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
+    options: {
+      data: {
+        display_name: `${email}-${Date.now()}`,
+        avatar:
+          "https://img.daisyui.com/images/profile/demo/batperson@192.webp",
+      },
+    },
   });
 
   if (error) {
@@ -43,4 +51,17 @@ export async function getUser() {
   } = await supabase.auth.getUser();
 
   return user;
+}
+
+export async function updateUser(newUserMetadata = {}) {
+  const { data, error } = await supabase.auth.updateUser({
+    data: newUserMetadata,
+  });
+
+  if (error) {
+    console.log("Error updating user", error.message);
+    return;
+  }
+
+  return data;
 }

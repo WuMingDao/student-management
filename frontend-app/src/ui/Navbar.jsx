@@ -1,9 +1,23 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { singout } from "../services/apiAuth";
+import { useEffect, useState } from "react";
+import { getConfig } from "../utils/configHepler";
 
 function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
+
+  const [currentAvatarUrl, setCurrentAvatarUrl] = useState(
+    "https://img.daisyui.com/images/profile/demo/yellingcat@192.webp"
+  );
+
+  useEffect(() => {
+    const token = getConfig("SUPABASE_TOKEN");
+    const userToken = JSON.parse(localStorage.getItem(token));
+
+    console.log(userToken.user.user_metadata.avatar);
+    setCurrentAvatarUrl(userToken.user.user_metadata.avatar);
+  }, []);
 
   async function onClick() {
     await singout();
@@ -105,7 +119,7 @@ function Navbar() {
               <div className="w-10 rounded-full">
                 <img
                   alt="Tailwind CSS Navbar component"
-                  src="https://img.daisyui.com/images/profile/demo/yellingcat@192.webp"
+                  src={currentAvatarUrl}
                 />
               </div>
             </div>
