@@ -1,14 +1,30 @@
 import { useState } from "react";
+import { uploadAvatar } from "../../services/apiStorage";
 
 function Profile() {
   const [currentAvatar, setCurrentAvatar] = useState(
     "https://img.daisyui.com/images/profile/demo/yellingcat@192.webp"
   );
 
+  const [avatarFile, setAvatarFile] = useState(null);
+
   function handleAvatarChange(event) {
     const file = event.target.files[0];
+    setAvatarFile(file);
+
     const newUrl = URL.createObjectURL(file);
     setCurrentAvatar(newUrl);
+  }
+
+  async function onClick() {
+    if (!avatarFile) {
+      // TODO: warning toast
+      console.log("Please select an avatar file");
+      return;
+    }
+
+    const data = await uploadAvatar(avatarFile);
+    console.log(data);
   }
 
   return (
@@ -41,7 +57,7 @@ function Profile() {
 
         <ul className="menu bg-base-200 rounded-box w-full">
           <li>
-            <details open>
+            <details>
               <summary>Change Class</summary>
               <ul>
                 <li>
@@ -57,7 +73,9 @@ function Profile() {
       </div>
 
       <div className="text-center mt-4">
-        <button className="btn btn-soft btn-primary my-2">Update Avatar</button>
+        <button className="btn btn-soft btn-primary my-2" onClick={onClick}>
+          Update Avatar
+        </button>
       </div>
     </fieldset>
   );
