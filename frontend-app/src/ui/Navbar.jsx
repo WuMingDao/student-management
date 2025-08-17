@@ -1,8 +1,15 @@
 import { useLocation, useNavigate } from "react-router-dom";
+import { singout } from "../services/apiAuth";
 
 function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
+
+  async function onClick() {
+    await singout();
+
+    navigate("/login");
+  }
 
   return (
     <>
@@ -116,7 +123,7 @@ function Navbar() {
               </li>
 
               <li>
-                <a>Settings</a>
+                <a onClick={onClick}>Sign Out</a>
               </li>
             </ul>
           </div>
