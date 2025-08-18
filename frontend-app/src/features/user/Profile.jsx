@@ -1,21 +1,19 @@
 import { use, useEffect, useState } from "react";
 import { uploadAvatar } from "../../services/apiStorage";
 import { getConfig } from "../../utils/configHepler";
+import { useAtom } from "jotai";
+import { userAtom } from "../../atoms/user";
 
 function Profile() {
-  const [currentAvatar, setCurrentAvatar] = useState(
-    "https://img.daisyui.com/images/profile/demo/yellingcat@192.webp"
-  );
+  const [user, setUser] = useAtom(userAtom);
+
+  const [currentAvatar, setCurrentAvatar] = useState(user.avatar);
 
   const [avatarFile, setAvatarFile] = useState(null);
 
   useEffect(() => {
-    const token = getConfig("SUPABASE_TOKEN");
-    const userToken = JSON.parse(localStorage.getItem(token));
-
-    console.log(userToken.user.user_metadata.avatar);
-    setCurrentAvatar(userToken.user.user_metadata.avatar);
-  }, []);
+    setCurrentAvatar(user.avatar);
+  }, [user]);
 
   function handleAvatarChange(event) {
     const file = event.target.files[0];
@@ -33,7 +31,8 @@ function Profile() {
     }
 
     const data = await uploadAvatar(avatarFile);
-    console.log(data);
+
+    setUser(data.user.user_metadata);
   }
 
   return (

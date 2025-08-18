@@ -2,21 +2,20 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { singout } from "../services/apiAuth";
 import { useEffect, useState } from "react";
 import { getConfig } from "../utils/configHepler";
+import { useAtom } from "jotai";
+import { userAtom } from "../atoms/user.js";
 
 function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [currentAvatarUrl, setCurrentAvatarUrl] = useState(
-    "https://img.daisyui.com/images/profile/demo/yellingcat@192.webp"
-  );
+  const [user, setUser] = useAtom(userAtom);
 
   useEffect(() => {
     const token = getConfig("SUPABASE_TOKEN");
     const userToken = JSON.parse(localStorage.getItem(token));
 
-    console.log(userToken.user.user_metadata.avatar);
-    setCurrentAvatarUrl(userToken.user.user_metadata.avatar);
+    setUser(userToken.user.user_metadata);
   }, []);
 
   async function onClick() {
@@ -117,10 +116,7 @@ function Navbar() {
               className="btn btn-ghost btn-circle avatar"
             >
               <div className="w-10 rounded-full">
-                <img
-                  alt="Tailwind CSS Navbar component"
-                  src={currentAvatarUrl}
-                />
+                <img alt="Tailwind CSS Navbar component" src={user.avatar} />
               </div>
             </div>
             <ul
