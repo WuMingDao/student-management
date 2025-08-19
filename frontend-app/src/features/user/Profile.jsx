@@ -3,6 +3,7 @@ import { uploadAvatar } from "../../services/apiStorage";
 import { getConfig } from "../../utils/configHepler";
 import { useAtom } from "jotai";
 import { userAtom } from "../../atoms/user";
+import { getTeacherById } from "../../services/apiTeacher";
 
 function Profile() {
   const [user, setUser] = useAtom(userAtom);
@@ -14,6 +15,30 @@ function Profile() {
   useEffect(() => {
     setCurrentAvatar(user.avatar);
   }, [user]);
+
+  // get class in charge render
+  const [ClassInChargeArr, setClassInChargeArr] = useState([]);
+
+  useEffect(() => {
+    async function loadData() {
+      const supabaseToken = getConfig("SUPABASE_TOKEN");
+      const userToken = JSON.parse(localStorage.getItem(supabaseToken));
+
+      if (!userToken) {
+        return;
+      }
+
+      const teachers = await getTeacherById(userToken.user.id);
+      const teacher = teachers[0];
+
+      // console.log(teacher.class_in_charge);
+
+      setClassInChargeArr(JSON.parse(teacher.class_in_charge));
+    }
+
+    loadData();
+    // console.log(ClassInChargeArr);
+  }, []);
 
   function handleAvatarChange(event) {
     const file = event.target.files[0];
@@ -63,21 +88,25 @@ function Profile() {
           disabled
         />
 
-        <ul className="menu bg-base-200 rounded-box w-full">
-          <li>
-            <details>
-              <summary>Change Class</summary>
-              <ul>
-                <li>
-                  <a>Class 1 | year 8</a>
-                </li>
-                <li>
-                  <a>Class 2 | year 9</a>
-                </li>
-              </ul>
-            </details>
-          </li>
-        </ul>
+        {ClassInChargeArr.length > 0 && (
+          <ul className="menu bg-base-200 rounded-box w-full">
+            <li>
+              <details>
+                <summary>Change Class</summary>
+                <ul>
+                  {ClassInChargeArr.map((classItem, index) => (
+                    <li key={index}>
+                      <a>
+                        Class {classItem.split("|")[0]} | year{" "}
+                        {classItem.split("|")[1]}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            </li>
+          </ul>
+        )}
       </div>
 
       <div className="text-center mt-4">

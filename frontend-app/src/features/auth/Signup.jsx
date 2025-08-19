@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { signup } from "../../services/apiAuth.js";
 import { useNavigate } from "react-router-dom";
+import { createTeacher } from "../../services/apiTeacher.js";
 
 function Signup() {
   const navigate = useNavigate();
@@ -13,6 +14,14 @@ function Signup() {
     const data = await signup(email, password);
 
     console.log(data);
+
+    const teacherID = data.user.id;
+
+    const teacher = await createTeacher({ teacher_id: teacherID });
+
+    console.log(teacher);
+
+    navigate("/login");
   }
 
   return (
