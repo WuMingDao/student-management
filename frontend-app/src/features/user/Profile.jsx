@@ -56,6 +56,7 @@ function Profile() {
     }
 
     const data = await uploadAvatar(avatarFile);
+    console.log(data);
 
     setUser(data.user.user_metadata);
   }

@@ -4,7 +4,7 @@ import ScoreList from "./features/score/ScoreList.jsx";
 import ScoreEdit from "./features/score/ScoreEdit.jsx";
 import StudentList from "./features/stduent/StudentList.jsx";
 import StudentEdit from "./features/stduent/StudentEdit.jsx";
-import StudentUpdate from "./features/stduent/StudentUpdate.jsx";
+import StudentCreate from "./features/stduent/StudentCreate.jsx";
 import Login from "./features/auth/Login.jsx";
 import Signup from "./features/auth/Signup.jsx";
 import Profile from "./features/user/Profile.jsx";
@@ -28,7 +28,7 @@ function App() {
             <Route path="student">
               <Route path="" element={<StudentList />} />
               <Route path=":id" element={<StudentEdit />} />
-              <Route path="update" element={<StudentUpdate />} />
+              <Route path="create" element={<StudentCreate />} />
             </Route>
             <Route path="profile" element={<Profile />} />
           </Route>

@@ -1,7 +1,7 @@
 import { getConfig } from "../utils/configHepler";
 import { supabase } from "../utils/supabase";
 
-export async function signup(email, password) {
+export async function signup(email, password, metadata = {}) {
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
@@ -10,6 +10,7 @@ export async function signup(email, password) {
         display_name: `${email}-${Date.now()}`,
         avatar:
           "https://img.daisyui.com/images/profile/demo/batperson@192.webp",
+        ...metadata,
       },
     },
   });

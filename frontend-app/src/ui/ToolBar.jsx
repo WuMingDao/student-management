@@ -10,7 +10,7 @@ function ToolBar() {
     console.log(pathname);
 
     if (pathname === "/home/student") {
-      navigate("/home/student/update");
+      navigate("/home/student/create");
       return;
     } else {
       navigate("/home/score/update");
