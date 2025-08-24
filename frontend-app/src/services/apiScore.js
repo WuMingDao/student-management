@@ -107,3 +107,32 @@ export async function createScore(newScore) {
 
   return data;
 }
+
+export async function getScoreByScoreId(scoreId) {
+  const { data: score, error } = await supabase
+    .from("score")
+    .select("*")
+    .eq("id", scoreId);
+
+  if (error) {
+    console.log(error.messgae);
+    return;
+  }
+
+  return score;
+}
+
+export async function updateScore(scoreId, updatedScore) {
+  const { data, error } = await supabase
+    .from("score")
+    .update(updatedScore)
+    .eq("id", scoreId)
+    .select();
+
+  if (error) {
+    console.log(error.messgae);
+    return;
+  }
+
+  return data;
+}

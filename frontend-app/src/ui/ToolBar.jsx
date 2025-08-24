@@ -77,7 +77,7 @@ function ToolBar() {
       </div>
 
       <div className="col-span-1 text-center">
-        <button class="btn btn-soft btn-primary" onClick={onClick}>
+        <button className="btn btn-soft btn-primary" onClick={onClick}>
           {location.pathname === "/home/student"
             ? "Create Student"
             : "Upload Score"}
