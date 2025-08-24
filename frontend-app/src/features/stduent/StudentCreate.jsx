@@ -27,6 +27,8 @@ function StudentUpdate() {
       const teacher = teachers[0];
 
       // console.log(teacher);
+      // setClassInChargeArr(JSON.parse(teacher.class_in_charge));
+
       const ClassInChargeArrData = await JSON.parse(teacher.class_in_charge);
 
       setClassInChargeArr(ClassInChargeArrData);
@@ -39,7 +41,7 @@ function StudentUpdate() {
   async function onClick() {
     // TODO: sign up student to supabase
     const userData = await signup(email, "123456", { isStudent: true });
-    console.log(userData);
+    // console.log(userData);
 
     // TODO: insert student to database
     const student = await createStudent({

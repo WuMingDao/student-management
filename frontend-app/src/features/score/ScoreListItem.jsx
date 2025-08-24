@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router-dom";
 
-function ScoreListItem({ scoreItem }) {
+function ScoreListItem({ scoreItem, currentStudent }) {
   const navigate = useNavigate();
 
   return (
     <tr>
-      <td>{scoreItem.student_id}</td>
-      <td>{scoreItem.student_id}</td>
+      <td>{currentStudent.name}</td>
+      <td>{`Class ${currentStudent.class} | Grade ${currentStudent.grade}`}</td>
       <td>{scoreItem.subject}</td>
       <td>
         {scoreItem.semesterSeason} {scoreItem.semesterYear}

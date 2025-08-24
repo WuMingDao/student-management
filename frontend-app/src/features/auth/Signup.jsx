@@ -11,14 +11,16 @@ function Signup() {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   async function onClick() {
+    // Sign up user
     const data = await signup(email, password);
 
     console.log(data);
 
+    // insesrt data to teacher table
     const teacherID = data.user.id;
     await createTeacher({ teacher_id: teacherID });
 
-    navigate("/login");
+    navigate("/auth/login");
   }
 
   return (
@@ -68,7 +70,7 @@ function Signup() {
         </button>
         <button
           className="btn btn-soft btn-secondary mx-2 my-2"
-          onClick={() => navigate("/login")}
+          onClick={() => navigate("/auth/login")}
         >
           Login
         </button>

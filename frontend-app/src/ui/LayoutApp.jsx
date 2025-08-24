@@ -11,11 +11,14 @@ function LayoutApp() {
       const isAuth = await isAutthenticated();
 
       if (!isAuth) {
-        navigate("/login");
+        navigate("/auth/login");
       }
     }
 
-    if (location.pathname !== "/login" && location.pathname !== "/signup") {
+    if (
+      location.pathname !== "/auth/login" &&
+      location.pathname !== "/auth/signup"
+    ) {
       isLogin();
     }
   }, []);

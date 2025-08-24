@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-function StudentListItem({ id, studentItem }) {
+function StudentListItem({ studentItem }) {
   // console.log(studentItem);
   const navigate = useNavigate();
 

@@ -13,7 +13,7 @@ function ToolBar() {
       navigate("/home/student/create");
       return;
     } else {
-      navigate("/home/score/update");
+      navigate("/home/score/upload");
     }
   }
 

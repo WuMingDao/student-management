@@ -1,9 +1,13 @@
-import { use, useEffect, useState } from "react";
-import { uploadAvatar } from "../../services/apiStorage";
-import { getConfig } from "../../utils/configHepler";
+import { useEffect, useState } from "react";
+
 import { useAtom } from "jotai";
 import { userAtom } from "../../atoms/user";
+
+import { uploadAvatar } from "../../services/apiStorage";
 import { getTeacherById } from "../../services/apiTeacher";
+
+import { getConfig } from "../../utils/configHepler";
+import { getUserId } from "../../utils/userHelper";
 
 function Profile() {
   const [user, setUser] = useAtom(userAtom);
@@ -21,14 +25,9 @@ function Profile() {
 
   useEffect(() => {
     async function loadData() {
-      const supabaseToken = getConfig("SUPABASE_TOKEN");
-      const userToken = JSON.parse(localStorage.getItem(supabaseToken));
+      const userId = getUserId();
 
-      if (!userToken) {
-        return;
-      }
-
-      const teachers = await getTeacherById(userToken.user.id);
+      const teachers = await getTeacherById(userId);
       const teacher = teachers[0];
 
       // console.log(teacher.class_in_charge);

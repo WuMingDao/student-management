@@ -25,7 +25,7 @@ function Navbar() {
   async function onClick() {
     await singout();
 
-    navigate("/login");
+    navigate("/auth/login");
   }
 
   return (

@@ -9,6 +9,7 @@ function Login() {
   const navigate = useNavigate();
 
   async function onClick() {
+    // login user
     const data = await login(email, password);
 
     if (data) {
@@ -58,7 +59,7 @@ function Login() {
       <div className="text-center mt-4">
         <button
           className="btn btn-soft btn-primary mx-2 my-2"
-          onClick={() => navigate("/signup")}
+          onClick={() => navigate("/auth/signup")}
         >
           Sign Up
         </button>
