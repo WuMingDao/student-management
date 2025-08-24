@@ -1,8 +1,11 @@
+import { useAtomValue } from "jotai";
 import { useLocation, useNavigate } from "react-router-dom";
+import { isStudentAtom } from "../atoms/user";
 
 function ToolBar() {
   const navigate = useNavigate();
   const location = useLocation();
+  const isStudent = useAtomValue(isStudentAtom);
 
   function onClick() {
     const { pathname } = location;
@@ -77,11 +80,13 @@ function ToolBar() {
       </div>
 
       <div className="col-span-1 text-center">
-        <button className="btn btn-soft btn-primary" onClick={onClick}>
-          {location.pathname === "/home/student"
-            ? "Create Student"
-            : "Upload Score"}
-        </button>
+        {!isStudent && (
+          <button className="btn btn-soft btn-primary" onClick={onClick}>
+            {location.pathname === "/home/student"
+              ? "Create Student"
+              : "Upload Score"}
+          </button>
+        )}
       </div>
     </section>
   );

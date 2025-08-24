@@ -2,12 +2,14 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { singout } from "../services/apiAuth";
 import { useEffect, useState } from "react";
 import { getConfig } from "../utils/configHepler";
-import { useAtom } from "jotai";
-import { userAtom } from "../atoms/user.js";
+import { useAtom, useAtomValue } from "jotai";
+import { isStudentAtom, userAtom } from "../atoms/user.js";
 
 function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
+
+  const isStudent = useAtomValue(isStudentAtom);
 
   const [user, setUser] = useAtom(userAtom);
 
@@ -51,11 +53,45 @@ function Navbar() {
                 />{" "}
               </svg>
             </div>
-            <ul
-              tabIndex={0}
-              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
-            >
-              {/* Mobile side */}
+            {!isStudent && (
+              <ul
+                tabIndex={0}
+                className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
+              >
+                {/* Mobile side */}
+                <li>
+                  <a
+                    className={
+                      location.pathname === "/home/student" ? "menu-active" : ""
+                    }
+                    onClick={() => navigate("/home/student")}
+                  >
+                    Student
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    className={
+                      location.pathname === "/home/score" ? "menu-active" : ""
+                    }
+                    onClick={() => navigate("/home/score")}
+                  >
+                    Score
+                  </a>
+                </li>
+              </ul>
+            )}
+          </div>
+          <a className="btn btn-ghost text-xl" onClick={() => navigate("/")}>
+            SunShine
+          </a>
+        </div>
+
+        {/* web side */}
+        <div className="navbar-center hidden lg:flex">
+          {!isStudent && (
+            <ul className="menu menu-horizontal px-1">
               <li>
                 <a
                   className={
@@ -78,37 +114,7 @@ function Navbar() {
                 </a>
               </li>
             </ul>
-          </div>
-          <a className="btn btn-ghost text-xl" onClick={() => navigate("/")}>
-            SunShine
-          </a>
-        </div>
-
-        {/* web side */}
-        <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal px-1">
-            <li>
-              <a
-                className={
-                  location.pathname === "/home/student" ? "menu-active" : ""
-                }
-                onClick={() => navigate("/home/student")}
-              >
-                Student
-              </a>
-            </li>
-
-            <li>
-              <a
-                className={
-                  location.pathname === "/home/score" ? "menu-active" : ""
-                }
-                onClick={() => navigate("/home/score")}
-              >
-                Score
-              </a>
-            </li>
-          </ul>
+          )}
         </div>
 
         {/* avatar */}

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-import { useAtom } from "jotai";
-import { userAtom } from "../../atoms/user";
+import { useAtom, useAtomValue } from "jotai";
+import { isStudentAtom, userAtom } from "../../atoms/user";
 
 import { getConfig } from "../../utils/configHepler";
 import { getUserId } from "../../utils/userHelper";
@@ -11,10 +11,12 @@ import { uploadAvatar } from "../../services/apiStorage";
 import { getTeacherById } from "../../services/apiTeacher";
 import { updateUser } from "../../services/apiAuth";
 import Loading from "../../ui/Loading";
+import { updateStudent } from "../../services/apiStudent";
 
 function Profile() {
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useAtom(userAtom);
+  const isStudent = useAtomValue(isStudentAtom);
 
   const [currentAvatar, setCurrentAvatar] = useState(user.avatar);
 
@@ -28,22 +30,26 @@ function Profile() {
   const [ClassInChargeArr, setClassInChargeArr] = useState([]);
 
   useEffect(() => {
+    if (isStudent === null) {
+      return;
+    }
+
     async function loadData() {
       setIsLoading(true);
-      const userId = getUserId();
 
-      const teachers = await getTeacherById(userId);
-      const teacher = teachers[0];
+      if (!isStudent) {
+        const userId = getUserId();
+        const teachers = await getTeacherById(userId);
+        const teacher = teachers[0];
 
-      // console.log(teacher.class_in_charge);
-
-      setClassInChargeArr(JSON.parse(teacher.class_in_charge));
+        setClassInChargeArr(JSON.parse(teacher.class_in_charge));
+      }
       setIsLoading(false);
     }
 
     loadData();
     // console.log(ClassInChargeArr);
-  }, []);
+  }, [isStudent]);
 
   function handleAvatarChange(event) {
     const file = event.target.files[0];
@@ -56,7 +62,7 @@ function Profile() {
   async function onClick() {
     if (!avatarFile) {
       toast.warning("Please select an avatar file");
-      console.log("Please select an avatar file");
+
       return;
     }
 
@@ -73,6 +79,17 @@ function Profile() {
     const supabaseUrl = getConfig("SUPABASE_URL");
     const newAvatarUrl = `${supabaseUrl}/storage/v1/object/public/avatar/public/${avatarFileName}`;
     const newUserMetadata = await updateUser({ avatar: newAvatarUrl });
+
+    // update user avatar
+    const userId = getUserId();
+
+    if (isStudent) {
+      const student = await updateStudent(userId, {
+        avatar: newAvatarUrl,
+      });
+
+      console.log(student);
+    }
 
     console.log(newUserMetadata);
     // update user matedata in jotai

@@ -1,5 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Toaster } from "sonner";
+import { DevTools } from "jotai-devtools";
+import "jotai-devtools/styles.css";
 
 import ScoreList from "./features/score/ScoreList.jsx";
 import ScoreUpload from "./features/score/ScoreUpload.jsx";
@@ -21,6 +23,9 @@ function App() {
   return (
     <>
       <Toaster position="top-right" richColors />
+
+      <DevTools />
+
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LayoutApp />}>

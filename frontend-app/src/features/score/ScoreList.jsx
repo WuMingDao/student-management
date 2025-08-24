@@ -1,12 +1,19 @@
 import { useEffect, useState } from "react";
+import { useAtomValue } from "jotai";
+
 import ScoreListItem from "./ScoreListItem";
 import { getScoreList } from "../../services/apiScore.js";
 import { getUserId } from "../../utils/userHelper.js";
-import { getStudentList } from "../../services/apiStudent.js";
+import {
+  getStudentByStudentId,
+  getStudentList,
+} from "../../services/apiStudent.js";
 import Loading from "../../ui/Loading";
+import { isStudentAtom } from "../../atoms/user.js";
 
 function ScoreList() {
   const [isLoading, setIsLoading] = useState(true);
+  const isStudent = useAtomValue(isStudentAtom);
 
   const [ScoreList, setScoreList] = useState([]);
   const [students, setStudents] = useState([]);
@@ -17,20 +24,29 @@ function ScoreList() {
       .includes(ScoreItem.student_id);
   });
   useEffect(() => {
+    if (isStudent === null) {
+      return null;
+    }
+
     async function fetchData() {
       setIsLoading(true);
       const userId = getUserId();
 
-      const mockScoreList = await getScoreList();
-      setScoreList(mockScoreList);
+      const ScoreListData = await getScoreList();
+      setScoreList(ScoreListData);
 
-      const studentList = await getStudentList(userId);
-      setStudents(studentList);
+      if (!isStudent) {
+        const studentList = await getStudentList(userId);
+        setStudents(studentList);
+      } else {
+        const studentList = await getStudentByStudentId(userId);
+        setStudents(studentList);
+      }
 
       setIsLoading(false);
     }
     fetchData();
-  }, []);
+  }, [isStudent]);
 
   return (
     <div>
@@ -53,9 +69,14 @@ function ScoreList() {
                 <ScoreListItem
                   key={scoreItem.id}
                   scoreItem={scoreItem}
-                  currentStudent={students.find(
-                    (student) => student.student_id === scoreItem.student_id
-                  )}
+                  currentStudent={
+                    isStudent
+                      ? students[0]
+                      : students.find(
+                          (student) =>
+                            student.student_id === scoreItem.student_id
+                        )
+                  }
                 />
               ))}
             </tbody>
