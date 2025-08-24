@@ -3,8 +3,11 @@ import { getConfig } from "../../utils/configHepler";
 import { getTeacherById } from "../../services/apiTeacher";
 import { createStudent } from "../../services/apiStudent";
 import { signup } from "../../services/apiAuth";
+import { useNavigate } from "react-router-dom";
 
 function StudentUpdate() {
+  const navigate = useNavigate();
+
   const [name, setName] = useState("some name");
   const [email, setEmail] = useState("some@example.com");
   const [gender, setGender] = useState("male");
@@ -55,6 +58,8 @@ function StudentUpdate() {
     });
 
     console.log(student);
+
+    navigate("/home/student");
   }
 
   return (

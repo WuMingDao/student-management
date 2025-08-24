@@ -101,3 +101,32 @@ export async function createStudent(newStudent) {
 
   return data;
 }
+
+export async function getStudentByStudentId(studentId) {
+  const { data: student, error } = await supabase
+    .from("student")
+    .select("*")
+    .eq("student_id", studentId);
+
+  if (error) {
+    console.error(error.message);
+    return;
+  }
+
+  return student;
+}
+
+export async function updateStudent(studentId, updatedStudent) {
+  const { data, error } = await supabase
+    .from("student")
+    .update(updatedStudent)
+    .eq("student_id", studentId)
+    .select();
+
+  if (error) {
+    console.error(error.message);
+    return;
+  }
+
+  return data;
+}

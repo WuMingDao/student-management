@@ -3,11 +3,12 @@ import { useEffect, useState } from "react";
 import { useAtom } from "jotai";
 import { userAtom } from "../../atoms/user";
 
-import { uploadAvatar } from "../../services/apiStorage";
-import { getTeacherById } from "../../services/apiTeacher";
-
 import { getConfig } from "../../utils/configHepler";
 import { getUserId } from "../../utils/userHelper";
+
+import { uploadAvatar } from "../../services/apiStorage";
+import { getTeacherById } from "../../services/apiTeacher";
+import { updateUser } from "../../services/apiAuth";
 
 function Profile() {
   const [user, setUser] = useAtom(userAtom);
@@ -54,10 +55,23 @@ function Profile() {
       return;
     }
 
-    const data = await uploadAvatar(avatarFile);
-    console.log(data);
+    // build avatar file name
+    const supabaseToken = getConfig("SUPABASE_TOKEN");
+    const userToken = JSON.parse(localStorage.getItem(supabaseToken));
+    const avatarFileName = `${userToken.user.email}-${Date.now()}.png`;
 
-    setUser(data.user.user_metadata);
+    // upload avatar file
+    await uploadAvatar(avatarFile, avatarFileName);
+    // update user metadata in supabase
+    const supabaseUrl = getConfig("SUPABASE_URL");
+    const newAvatarUrl = `${supabaseUrl}/storage/v1/object/public/avatar/public/${avatarFileName}`;
+    const newUserMetadata = await updateUser({ avatar: newAvatarUrl });
+
+    console.log(newUserMetadata);
+    // update user matedata in jotai
+    setUser(newUserMetadata.user.user_metadata);
+
+    console.log(user);
   }
 
   return (

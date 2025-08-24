@@ -35,7 +35,7 @@ function StudentListItem({ studentItem }) {
       <th>
         <button
           className="btn btn-soft btn-info"
-          onClick={() => navigate(`/home/student/${studentItem.id}`)}
+          onClick={() => navigate(`/home/student/${studentItem.student_id}`)}
         >
           detail
         </button>
