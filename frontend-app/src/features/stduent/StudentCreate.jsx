@@ -1,12 +1,18 @@
 import { useEffect, useState } from "react";
-import { getConfig } from "../../utils/configHepler";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+
 import { getTeacherById } from "../../services/apiTeacher";
 import { createStudent } from "../../services/apiStudent";
 import { signup } from "../../services/apiAuth";
-import { useNavigate } from "react-router-dom";
+
+import Loading from "../../ui/Loading";
+
+import { getConfig } from "../../utils/configHepler";
 
 function StudentUpdate() {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
 
   const [name, setName] = useState("some name");
   const [email, setEmail] = useState("some@example.com");
@@ -26,6 +32,7 @@ function StudentUpdate() {
     setTeacherId(userToken.user.id);
 
     async function fetchData() {
+      setIsLoading(true);
       const teachers = await getTeacherById(userToken.user.id);
       const teacher = teachers[0];
 
@@ -36,17 +43,19 @@ function StudentUpdate() {
 
       setClassInChargeArr(ClassInChargeArrData);
       setClassinfo(ClassInChargeArrData[0]);
+      setIsLoading(false);
     }
 
     fetchData();
   }, []);
 
   async function onClick() {
-    // TODO: sign up student to supabase
+    toast.loading("Loading…");
+    // sign up student to supabase
     const userData = await signup(email, "123456", { isStudent: true });
     // console.log(userData);
 
-    // TODO: insert student to database
+    // insert student to database
     const student = await createStudent({
       name,
       class: classinfo.split("|")[0],
@@ -59,58 +68,70 @@ function StudentUpdate() {
 
     console.log(student);
 
+    toast.dismiss();
+    toast.success("Student created successfully!");
+
     navigate("/home/student");
   }
 
   return (
-    <fieldset className="fieldset bg-base-200 border-base-300 rounded-box border p-4 w-1/3 mx-auto shadow-2xl shadow-blue-300 mt-40">
-      <div className="w-3/4 mx-auto relative">
-        <label className="label">Email</label>
-        <input
-          type="email"
-          className="input w-full"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-        />
+    <div>
+      {isLoading && <Loading />}
+      {!isLoading && (
+        <fieldset className="fieldset bg-base-200 border-base-300 rounded-box border p-4 w-1/3 mx-auto shadow-2xl shadow-blue-300 mt-40">
+          <div className="w-3/4 mx-auto relative">
+            <label className="label">Email</label>
+            <input
+              type="email"
+              className="input w-full"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+            />
 
-        <label className="label">Name</label>
-        <input
-          type="text"
-          className="input w-full"
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-        />
+            <label className="label">Name</label>
+            <input
+              type="text"
+              className="input w-full"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+            />
 
-        <select
-          className="select w-full my-4"
-          value={classinfo}
-          onChange={(event) => setClassinfo(event.target.value)}
-        >
-          <option disabled={true}>Choose Class</option>
-          {ClassInChargeArr.map((classItem, index) => (
-            <option key={index} value={classItem}>
-              Class {classItem.split("|")[0]} | Year {classItem.split("|")[1]}
-            </option>
-          ))}
-        </select>
+            <select
+              className="select w-full my-4"
+              value={classinfo}
+              onChange={(event) => setClassinfo(event.target.value)}
+            >
+              <option disabled={true}>Choose Class</option>
+              {ClassInChargeArr.map((classItem, index) => (
+                <option key={index} value={classItem}>
+                  Class {classItem.split("|")[0]} | Year{" "}
+                  {classItem.split("|")[1]}
+                </option>
+              ))}
+            </select>
 
-        <select
-          className="select w-full"
-          value={gender}
-          onChange={(event) => setGender(event.target.value)}
-        >
-          <option disabled={true}>Choose Gender</option>
-          <option value="Male">male</option>
-          <option value="Female">female</option>
-        </select>
+            <select
+              className="select w-full"
+              value={gender}
+              onChange={(event) => setGender(event.target.value)}
+            >
+              <option disabled={true}>Choose Gender</option>
+              <option>male</option>
+              <option>female</option>
+            </select>
 
-        <div className="text-center mt-4">
-          <button className="btn btn-soft btn-primary my-2" onClick={onClick}>
-            Create Student
-          </button>
-        </div>
-      </div>
-    </fieldset>
+            <div className="text-center mt-4">
+              <button
+                className="btn btn-soft btn-primary my-2"
+                onClick={onClick}
+              >
+                Create Student
+              </button>
+            </div>
+          </div>
+        </fieldset>
+      )}
+    </div>
   );
 }
 export default StudentUpdate;

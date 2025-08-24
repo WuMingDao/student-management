@@ -1,4 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { Toaster } from "sonner";
 
 import ScoreList from "./features/score/ScoreList.jsx";
 import ScoreUpload from "./features/score/ScoreUpload.jsx";
@@ -18,34 +19,37 @@ import Home from "./pages/Home.jsx";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LayoutApp />}>
-          <Route index element={<Navigate to="/home/score" />} />
+    <>
+      <Toaster position="top-right" richColors />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<LayoutApp />}>
+            <Route index element={<Navigate to="/home/score" />} />
 
-          <Route path="home" element={<Home />}>
-            <Route path="score">
-              <Route index element={<ScoreList />} />
-              <Route path=":id" element={<ScoreUpdate />} />
-              <Route path="upload" element={<ScoreUpload />} />
+            <Route path="home" element={<Home />}>
+              <Route path="score">
+                <Route index element={<ScoreList />} />
+                <Route path=":id" element={<ScoreUpdate />} />
+                <Route path="upload" element={<ScoreUpload />} />
+              </Route>
+
+              <Route path="student">
+                <Route index element={<StudentList />} />
+                <Route path=":id" element={<StudentEdit />} />
+                <Route path="create" element={<StudentCreate />} />
+              </Route>
+
+              <Route path="profile" element={<Profile />} />
             </Route>
-
-            <Route path="student">
-              <Route index element={<StudentList />} />
-              <Route path=":id" element={<StudentEdit />} />
-              <Route path="create" element={<StudentCreate />} />
-            </Route>
-
-            <Route path="profile" element={<Profile />} />
           </Route>
-        </Route>
 
-        <Route path="auth">
-          <Route path="login" element={<Login />} />
-          <Route path="signup" element={<Signup />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+          <Route path="auth">
+            <Route path="login" element={<Login />} />
+            <Route path="signup" element={<Signup />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 }
 export default App;

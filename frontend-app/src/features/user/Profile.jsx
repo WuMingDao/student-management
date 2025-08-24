@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 import { useAtom } from "jotai";
 import { userAtom } from "../../atoms/user";
@@ -54,10 +55,12 @@ function Profile() {
 
   async function onClick() {
     if (!avatarFile) {
-      // TODO: warning toast
+      toast.warning("Please select an avatar file");
       console.log("Please select an avatar file");
       return;
     }
+
+    toast.loading("Uploading avatar...");
 
     // build avatar file name
     const supabaseToken = getConfig("SUPABASE_TOKEN");
@@ -76,6 +79,9 @@ function Profile() {
     setUser(newUserMetadata.user.user_metadata);
 
     console.log(user);
+
+    toast.dismiss();
+    toast.success("Avatar updated successfully");
   }
 
   return (
