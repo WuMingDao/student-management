@@ -8,8 +8,10 @@ import {
   updateStudent,
 } from "../../services/apiStudent";
 import { uploadAvatar } from "../../services/apiStorage";
+import Loading from "../../ui/Loading";
 
 function StudentEdit() {
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
   const [currentAvatar, setCurrentAvatar] = useState(
@@ -24,12 +26,15 @@ function StudentEdit() {
 
   useEffect(() => {
     async function fetchData() {
+      setIsLoading(true);
       const stduents = await getStudentByStudentId(param.id);
       const student = stduents[0];
 
       setName(student.name);
       setGender(student.gender);
       setCurrentAvatar(student.avatar);
+
+      setIsLoading(false);
     }
 
     fetchData();
@@ -75,49 +80,59 @@ function StudentEdit() {
   }
 
   return (
-    <fieldset className="fieldset bg-base-200 border-base-300 rounded-box border p-4 w-1/3 mx-auto shadow-2xl shadow-blue-300 mt-40">
-      <div className="avatar my-4 flex justify-center">
-        <div className="w-24 rounded-full ">
-          <label htmlFor="input-avatar" className="cursor-pointer">
-            <img src={currentAvatar} />
-          </label>
+    <div>
+      {isLoading && <Loading />}
+      {!isLoading && (
+        <div>
+          <fieldset className="fieldset bg-base-200 border-base-300 rounded-box border p-4 w-1/3 mx-auto shadow-2xl shadow-blue-300 mt-40">
+            <div className="avatar my-4 flex justify-center">
+              <div className="w-24 rounded-full ">
+                <label htmlFor="input-avatar" className="cursor-pointer">
+                  <img src={currentAvatar} />
+                </label>
+              </div>
+            </div>
+
+            <input
+              id="input-avatar"
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleAvatarChange}
+            />
+
+            <div className="w-3/4 mx-auto relative">
+              <label className="label">Name</label>
+              <input
+                type="text"
+                className="input w-full"
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+              />
+
+              <select
+                className="select w-full my-4"
+                value={gender}
+                onChange={(event) => setGender(event.target.value)}
+              >
+                <option disabled>Choose Gender</option>
+                <option>male</option>
+                <option>female</option>
+              </select>
+
+              <div className="text-center mt-4">
+                <button
+                  className="btn btn-soft btn-primary my-2"
+                  onClick={onClick}
+                >
+                  Update Profile
+                </button>
+              </div>
+            </div>
+          </fieldset>
         </div>
-      </div>
-
-      <input
-        id="input-avatar"
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={handleAvatarChange}
-      />
-
-      <div className="w-3/4 mx-auto relative">
-        <label className="label">Name</label>
-        <input
-          type="text"
-          className="input w-full"
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-        />
-
-        <select
-          className="select w-full my-4"
-          value={gender}
-          onChange={(event) => setGender(event.target.value)}
-        >
-          <option disabled>Choose Gender</option>
-          <option>male</option>
-          <option>female</option>
-        </select>
-
-        <div className="text-center mt-4">
-          <button className="btn btn-soft btn-primary my-2" onClick={onClick}>
-            Update Profile
-          </button>
-        </div>
-      </div>
-    </fieldset>
+      )}
+    </div>
   );
 }
 export default StudentEdit;

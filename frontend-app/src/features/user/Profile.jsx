@@ -9,8 +9,10 @@ import { getUserId } from "../../utils/userHelper";
 import { uploadAvatar } from "../../services/apiStorage";
 import { getTeacherById } from "../../services/apiTeacher";
 import { updateUser } from "../../services/apiAuth";
+import Loading from "../../ui/Loading";
 
 function Profile() {
+  const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useAtom(userAtom);
 
   const [currentAvatar, setCurrentAvatar] = useState(user.avatar);
@@ -26,6 +28,7 @@ function Profile() {
 
   useEffect(() => {
     async function loadData() {
+      setIsLoading(true);
       const userId = getUserId();
 
       const teachers = await getTeacherById(userId);
@@ -34,6 +37,7 @@ function Profile() {
       // console.log(teacher.class_in_charge);
 
       setClassInChargeArr(JSON.parse(teacher.class_in_charge));
+      setIsLoading(false);
     }
 
     loadData();
@@ -75,60 +79,65 @@ function Profile() {
   }
 
   return (
-    <fieldset className="fieldset bg-base-200 border-base-300 rounded-box border p-4 w-1/3 mx-auto shadow-2xl shadow-blue-300 mt-40">
-      <div className="avatar my-4 flex justify-center">
-        <div className="w-24 rounded-full ">
-          <label htmlFor="input-avatar" className="cursor-pointer">
-            <img src={currentAvatar} />
-          </label>
-        </div>
-      </div>
+    <div>
+      {isLoading && <Loading />}
+      {!isLoading && (
+        <fieldset className="fieldset bg-base-200 border-base-300 rounded-box border p-4 w-1/3 mx-auto shadow-2xl shadow-blue-300 mt-40">
+          <div className="avatar my-4 flex justify-center">
+            <div className="w-24 rounded-full ">
+              <label htmlFor="input-avatar" className="cursor-pointer">
+                <img src={currentAvatar} />
+              </label>
+            </div>
+          </div>
 
-      <input
-        id="input-avatar"
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={handleAvatarChange}
-      />
+          <input
+            id="input-avatar"
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleAvatarChange}
+          />
 
-      <div className="w-3/4 mx-auto relative">
-        <label className="label">wumingdao</label>
+          <div className="w-3/4 mx-auto relative">
+            <label className="label">wumingdao</label>
 
-        <input
-          type="email"
-          className="input w-full"
-          value={"wumingdao"}
-          disabled
-        />
+            <input
+              type="email"
+              className="input w-full"
+              value={"wumingdao"}
+              disabled
+            />
 
-        {ClassInChargeArr.length > 0 && (
-          <ul className="menu bg-base-200 rounded-box w-full">
-            <li>
-              <details>
-                <summary>Change Class</summary>
-                <ul>
-                  {ClassInChargeArr.map((classItem, index) => (
-                    <li key={index}>
-                      <a>
-                        Class {classItem.split("|")[0]} | year{" "}
-                        {classItem.split("|")[1]}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </details>
-            </li>
-          </ul>
-        )}
-      </div>
+            {ClassInChargeArr.length > 0 && (
+              <ul className="menu bg-base-200 rounded-box w-full">
+                <li>
+                  <details>
+                    <summary>Change Class</summary>
+                    <ul>
+                      {ClassInChargeArr.map((classItem, index) => (
+                        <li key={index}>
+                          <a>
+                            Class {classItem.split("|")[0]} | year{" "}
+                            {classItem.split("|")[1]}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </details>
+                </li>
+              </ul>
+            )}
+          </div>
 
-      <div className="text-center mt-4">
-        <button className="btn btn-soft btn-primary my-2" onClick={onClick}>
-          Update Avatar
-        </button>
-      </div>
-    </fieldset>
+          <div className="text-center mt-4">
+            <button className="btn btn-soft btn-primary my-2" onClick={onClick}>
+              Update Avatar
+            </button>
+          </div>
+        </fieldset>
+      )}
+    </div>
   );
 }
 export default Profile;
