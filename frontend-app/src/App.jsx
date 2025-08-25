@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Toaster } from "sonner";
 import { DevTools } from "jotai-devtools";
 import "jotai-devtools/styles.css";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import ScoreList from "./features/score/ScoreList.jsx";
 import ScoreUpload from "./features/score/ScoreUpload.jsx";
@@ -19,9 +20,11 @@ import Profile from "./features/user/Profile.jsx";
 import LayoutApp from "./ui/LayoutApp.jsx";
 import Home from "./pages/Home.jsx";
 
+const queryClient = new QueryClient();
+
 function App() {
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <Toaster position="top-right" richColors />
 
       <DevTools />
@@ -54,7 +57,7 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
-    </>
+    </QueryClientProvider>
   );
 }
 export default App;

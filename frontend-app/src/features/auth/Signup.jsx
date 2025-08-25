@@ -1,16 +1,43 @@
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { toast } from "sonner";
+import { useMutation } from "@tanstack/react-query";
 
-import { signup } from "../../services/apiAuth.js";
-import { useNavigate } from "react-router-dom";
-import { createTeacher } from "../../services/apiTeacher.js";
+import { signup as signupAPI } from "../../services/apiAuth.js";
+import { createTeacher as createTeacherApi } from "../../services/apiTeacher.js";
 import ErrorMessage from "../../ui/ErrorMessage.jsx";
 
 function Signup() {
   const navigate = useNavigate();
 
-  //  vail form in signup
+  // create tearcer user to supabase user
+  const { mutate: createTeacher, isPending: isCreatingTeacher } = useMutation({
+    mutationFn: createTeacherApi,
+    onSuccess: () => {
+      toast.success("Signup successful, Please comfirm your email");
+      navigate("/auth/login");
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  // insert teacher user to supabase table
+  const { mutate: signup, isPending: isSigningUp } = useMutation({
+    mutationFn: ({ email, password }) => signupAPI(email, password),
+    onSuccess: (userData) => {
+      createTeacher({ teacher_id: userData.user.id });
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const isLoading = isCreatingTeacher || isSigningUp;
+
+  //  vail form handle
   const Validationschema = yup
     .object({
       email: yup.string().required().email(),
@@ -23,6 +50,7 @@ function Signup() {
     })
     .required();
 
+  // settip form vail
   const {
     register,
     handleSubmit,
@@ -32,17 +60,8 @@ function Signup() {
     resolver: yupResolver(Validationschema),
   });
 
-  async function onSubmit({ email, password }) {
-    // Sign up user
-    const data = await signup(email, password);
-
-    console.log(data);
-
-    // insesrt data to teacher table
-    const teacherID = data.user.id;
-    await createTeacher({ teacher_id: teacherID });
-
-    navigate("/auth/login");
+  function onSubmit({ email, password }) {
+    signup({ email, password });
   }
 
   return (
@@ -88,13 +107,16 @@ function Signup() {
         </div>
 
         <div className="text-center mt-4">
-          {/* TODO: form verification */}
-          <button className="btn btn-soft btn-primary mx-2 my-2">
+          <button
+            className="btn btn-soft btn-primary mx-2 my-2"
+            disabled={isLoading}
+          >
             Sign Up
           </button>
           <button
             className="btn btn-soft btn-secondary mx-2 my-2"
             onClick={() => navigate("/auth/login")}
+            disabled={isLoading}
           >
             Login
           </button>

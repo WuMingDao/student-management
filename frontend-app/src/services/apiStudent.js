@@ -27,7 +27,7 @@ export async function getStudentListWithLimit(
 
   if (error) {
     console.error(error.message);
-    return;
+    throw new Error(error.message);
   }
 
   return student;
@@ -41,7 +41,7 @@ export async function countStudents(teacherId) {
 
   if (error) {
     console.error(error.message);
-    return;
+    throw new Error(error.message);
   }
 
   return count;

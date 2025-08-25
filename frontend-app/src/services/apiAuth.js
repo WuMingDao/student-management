@@ -17,8 +17,10 @@ export async function signup(email, password, metadata = {}) {
 
   if (error) {
     console.log("Error signing up", error.message);
-    return;
+    throw new Error(error.message);
   }
+
+  console.log("User created", data);
 
   return data;
 }
@@ -31,7 +33,7 @@ export async function login(email, password) {
 
   if (error) {
     console.log("Error logging in", error.message);
-    return;
+    throw new Error(error.message);
   }
 
   return data;
@@ -42,7 +44,7 @@ export async function singout() {
 
   if (error) {
     console.log("Error logging out", error.message);
-    return;
+    throw new Error(error.message);
   }
 }
 
@@ -61,7 +63,7 @@ export async function updateUser(newUserMetadata = {}) {
 
   if (error) {
     console.log("Error updating user", error.message);
-    return;
+    throw new Error(error.message);
   }
 
   return data;

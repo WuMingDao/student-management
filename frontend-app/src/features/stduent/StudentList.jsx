@@ -1,20 +1,24 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { useAtomValue } from "jotai";
+import { toast } from "sonner";
+import { useMutation } from "@tanstack/react-query";
+
 import StudentListItem from "./StudentListItem";
 import {
-  countStudents,
-  getStudentList,
-  getStudentListWithLimit,
+  countStudents as countStudentsApi,
+  getStudentListWithLimit as getStudentListWithLimitApi,
 } from "../../services/apiStudent";
-import { getUserId } from "../../utils/userHelper";
-import Loading from "../../ui/Loading";
-import { useAtomValue } from "jotai";
+
 import { StudentSearchConditionAtom } from "../../atoms/search";
-import { useSearchParams } from "react-router-dom";
+
 import { getConfig } from "../../utils/configHepler";
+import { getUserId } from "../../utils/userHelper";
+
 import Pagination from "../../ui/Pagination";
+import Loading from "../../ui/Loading";
 
 function StudentList() {
-  const [isLoading, setIsLoading] = useState(true);
   const [studentList, setStudentList] = useState([]);
   const studentSearchCondition = useAtomValue(StudentSearchConditionAtom);
 
@@ -46,48 +50,36 @@ function StudentList() {
   const [studenCount, setStudenCount] = useState(0);
   const pageCount = Math.ceil(studenCount / pageSize);
 
-  useEffect(() => {
-    async function fetchData() {
-      const userId = getUserId();
-      const studentCountData = await countStudents(userId);
-      console.log(studentCountData);
-      setStudenCount(studentCountData);
-    }
+  const { mutate: countStudents, isPending: isCounting } = useMutation({
+    mutationFn: countStudentsApi,
+    onSuccess: (studentLiastData) => setStudenCount(studentLiastData),
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
 
-    fetchData();
+  const { mutate: getStudentListWithLimit, isPending: isStudentListLoading } =
+    useMutation({
+      mutationFn: ({ userId, currentPage, pageSize }) =>
+        getStudentListWithLimitApi(userId, currentPage, pageSize),
+      onSuccess: (studentListData) => setStudentList(studentListData),
+      onError: (error) => {
+        toast.error(error.message);
+      },
+    });
+
+  const isLoading = isCounting || isStudentListLoading;
+
+  useEffect(() => {
+    countStudents(getUserId());
   }, []);
 
-  // console.log(studenCount);
-
   useEffect(() => {
-    async function fetchData() {
-      setIsLoading(true);
-      const userId = getUserId();
-
-      const studentListData = await getStudentListWithLimit(
-        userId,
-        currentPage,
-        pageSize
-      );
-      setStudentList(studentListData);
-
-      // setStudentList(getStudentList(userId));
-      setIsLoading(false);
-    }
-
-    fetchData();
-  }, [currentPage]);
-
-  // console.log(studentList);
-
-  // pagination
-
-  // by pagination number => pagination
-  useEffect(() => {
+    const userId = getUserId();
     setSearchParams({ page: currentPage });
+    getStudentListWithLimit({ userId, currentPage, pageSize });
   }, [currentPage]);
 
-  // by pagination number buttom => serachParams
   useEffect(() => {
     setCurrentPage(searchParams.get("page") || 1);
   }, [searchParams.get("page")]);
@@ -114,7 +106,7 @@ function StudentList() {
                 </tr>
               </thead>
               <tbody>
-                {studentList.map((studentItem) => (
+                {filterStudentList.map((studentItem) => (
                   <StudentListItem
                     key={studentItem.id}
                     studentItem={studentItem}

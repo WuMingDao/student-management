@@ -5,7 +5,7 @@ export async function createTeacher(teacher) {
 
   if (error) {
     console.log(error.message);
-    return;
+    throw new Error(error.message);
   }
 }
 
@@ -17,7 +17,7 @@ export async function getTeacherById(teacherId) {
 
   if (error) {
     console.log(error.message);
-    return;
+    throw new Error(error.message);
   }
 
   return teacher;
