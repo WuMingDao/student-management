@@ -3,17 +3,17 @@ import { useAtomValue } from "jotai";
 
 import ScoreListItem from "./ScoreListItem";
 import { getScoreList } from "../../services/apiScore.js";
-import { getUserId } from "../../utils/userHelper.js";
 import {
   getStudentByStudentId,
   getStudentList,
 } from "../../services/apiStudent.js";
-import Loading from "../../ui/Loading";
+
 import { isStudentAtom } from "../../atoms/user.js";
-import {
-  scoreSearchConditionAtom,
-  StudentSearchConditionAtom,
-} from "../../atoms/search.js";
+import { scoreSearchConditionAtom } from "../../atoms/search.js";
+
+import { getUserId } from "../../utils/userHelper.js";
+
+import Loading from "../../ui/Loading";
 
 function ScoreList() {
   const [isLoading, setIsLoading] = useState(true);
