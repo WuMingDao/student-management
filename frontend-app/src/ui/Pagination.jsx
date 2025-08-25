@@ -1,14 +1,25 @@
-function Pagination() {
+import { useSearchParams } from "react-router-dom";
+
+function Pagination({ currentPage = 1, pageCount = 1 }) {
+  const [_, setSearchParams] = useSearchParams();
+
   return (
     <>
-      <div className="join mt-220 felx justify-center">
-        <button className="join-item btn">1</button>
-        <button className="join-item btn">2</button>
-        <button className="join-item btn btn-disabled">...</button>
-        <button className="join-item btn">99</button>
-        <button className="join-item btn">100</button>
+      <div className="join flex justify-center items-center ">
+        {new Array(pageCount).fill(1).map((_, idx) => (
+          <button
+            className={`join-item btn btn-lg ${
+              currentPage == idx + 1 ? "btn-disabled" : ""
+            }`}
+            onClick={() => setSearchParams({ page: idx + 1 })}
+            key={idx}
+          >
+            {idx + 1}
+          </button>
+        ))}
       </div>
     </>
   );
 }
 export default Pagination;
+-1;

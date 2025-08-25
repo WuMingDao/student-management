@@ -14,6 +14,9 @@ import { scoreSearchConditionAtom } from "../../atoms/search.js";
 import { getUserId } from "../../utils/userHelper.js";
 
 import Loading from "../../ui/Loading";
+import Pagination from "../../ui/Pagination.jsx";
+import { useSearchParams } from "react-router-dom";
+import { getConfig } from "../../utils/configHepler.js";
 
 function ScoreList() {
   const [isLoading, setIsLoading] = useState(true);
@@ -79,40 +82,68 @@ function ScoreList() {
     fetchData();
   }, [isStudent]);
 
+  // pagination
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [currentPage, setCurrentPage] = useState(searchParams.get("page") || 1);
+
+  const pageSize = getConfig("PAGE_SIZE");
+  const pageCount = Math.ceil(
+    filteredScoreListBySearchCondition.length / pageSize
+  );
+
+  // by pagination number => pagination
+  useEffect(() => {
+    setSearchParams({ page: currentPage });
+  }, [currentPage]);
+
+  // by pagination number buttom => serachParams
+  useEffect(() => {
+    setCurrentPage(searchParams.get("page") || 1);
+  }, [searchParams.get("page")]);
+
+  // => show data
+  const filteredScoreListByPage = filteredScoreListBySearchCondition.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
   return (
     <div>
       {isLoading && <Loading />}
       {!isLoading && (
-        <div className="overflow-x-auto">
-          <table className="table table-lg">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Class</th>
-                <th>Subject</th>
-                <th>Semester</th>
-                <th>Score</th>
-              </tr>
-            </thead>
-            <tbody>
-              {/* <ScoreListItem /> */}
-              {filteredScoreListBySearchCondition.map((scoreItem) => (
-                <ScoreListItem
-                  key={scoreItem.id}
-                  scoreItem={scoreItem}
-                  currentStudent={
-                    isStudent
-                      ? students[0]
-                      : students.find(
-                          (student) =>
-                            student.student_id === scoreItem.student_id
-                        )
-                  }
-                />
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <>
+          <div className="overflow-x-auto">
+            <table className="table table-lg">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Class</th>
+                  <th>Subject</th>
+                  <th>Semester</th>
+                  <th>Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                {/* <ScoreListItem /> */}
+                {filteredScoreListByPage.map((scoreItem) => (
+                  <ScoreListItem
+                    key={scoreItem.id}
+                    scoreItem={scoreItem}
+                    currentStudent={
+                      isStudent
+                        ? students[0]
+                        : students.find(
+                            (student) =>
+                              student.student_id === scoreItem.student_id
+                          )
+                    }
+                  />
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <Pagination currentPage={currentPage} pageCount={pageCount} />
+        </>
       )}
     </div>
   );
