@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { getConfig } from "../utils/configHepler";
 import { useAtom, useAtomValue } from "jotai";
 import { isStudentAtom, userAtom } from "../atoms/user.js";
+import ToggleTheme from "./ToggleTheme.jsx";
 
 function Navbar() {
   const location = useLocation();
@@ -119,7 +120,11 @@ function Navbar() {
 
         {/* avatar */}
         <div className="navbar-end">
+          {/* theme toggle */}
+
+          <ToggleTheme />
           <div className="dropdown dropdown-end">
+            {/* avatar */}
             <div
               tabIndex={0}
               role="button"
@@ -129,6 +134,8 @@ function Navbar() {
                 <img alt="Tailwind CSS Navbar component" src={user.avatar} />
               </div>
             </div>
+
+            {/* user profile dropdown */}
             <ul
               tabIndex={0}
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
