@@ -10,6 +10,10 @@ import {
 } from "../../services/apiStudent.js";
 import Loading from "../../ui/Loading";
 import { isStudentAtom } from "../../atoms/user.js";
+import {
+  scoreSearchConditionAtom,
+  StudentSearchConditionAtom,
+} from "../../atoms/search.js";
 
 function ScoreList() {
   const [isLoading, setIsLoading] = useState(true);
@@ -23,6 +27,33 @@ function ScoreList() {
       .map((student) => student.student_id)
       .includes(ScoreItem.student_id);
   });
+
+  // by search condition filter score list
+  const scoreSearchCondition = useAtomValue(scoreSearchConditionAtom);
+
+  const filteredScoreListBySearchCondition = filterdScoreList.filter(
+    (scoreItem) => {
+      if (!scoreSearchCondition.length) {
+        return filterdScoreList;
+      }
+
+      const scoreInfoJSON = JSON.stringify([
+        scoreItem.subject.toLowerCase(),
+        scoreItem.semesterYear,
+        scoreItem.semesterSeason.toLowerCase(),
+        scoreItem.score,
+      ]);
+
+      for (const condition of scoreSearchCondition) {
+        if (!scoreInfoJSON.includes(condition)) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+  );
+
   useEffect(() => {
     if (isStudent === null) {
       return null;
@@ -65,7 +96,7 @@ function ScoreList() {
             </thead>
             <tbody>
               {/* <ScoreListItem /> */}
-              {filterdScoreList.map((scoreItem) => (
+              {filteredScoreListBySearchCondition.map((scoreItem) => (
                 <ScoreListItem
                   key={scoreItem.id}
                   scoreItem={scoreItem}

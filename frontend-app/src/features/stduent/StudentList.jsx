@@ -3,11 +3,34 @@ import StudentListItem from "./StudentListItem";
 import { getStudentList } from "../../services/apiStudent";
 import { getUserId } from "../../utils/userHelper";
 import Loading from "../../ui/Loading";
+import { useAtomValue } from "jotai";
+import { StudentSearchConditionAtom } from "../../atoms/search";
 
 function StudentList() {
   const [isLoading, setIsLoading] = useState(true);
-
   const [studentList, setStudentList] = useState([]);
+  const studentSearchCondition = useAtomValue(StudentSearchConditionAtom);
+
+  const filterStudentList = studentList.filter((studentItem) => {
+    if (!studentSearchCondition.length) {
+      return studentList;
+    }
+
+    const studentInfoJSON = JSON.stringify([
+      studentItem.name.toLowerCase(),
+      studentItem.class,
+      studentItem.gender,
+      studentItem.grade,
+    ]);
+
+    for (const condition of studentSearchCondition) {
+      if (!studentInfoJSON.includes(condition)) {
+        return false;
+      }
+    }
+
+    return true;
+  });
 
   useEffect(() => {
     async function fetchData() {
@@ -47,7 +70,7 @@ function StudentList() {
               </tr>
             </thead>
             <tbody>
-              {studentList.map((studentItem) => (
+              {filterStudentList.map((studentItem) => (
                 <StudentListItem
                   key={studentItem.id}
                   studentItem={studentItem}

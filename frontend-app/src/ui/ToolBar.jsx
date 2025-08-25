@@ -1,11 +1,22 @@
-import { useAtomValue } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+
+import {
+  scoreSearchConditionAtom,
+  StudentSearchConditionAtom,
+} from "../atoms/search";
+
 import { isStudentAtom } from "../atoms/user";
+import { useState } from "react";
+import Condition from "./Condition";
 
 function ToolBar() {
   const navigate = useNavigate();
   const location = useLocation();
   const isStudent = useAtomValue(isStudentAtom);
+
+  const [searchString, setSearchString] = useState("");
 
   function onClick() {
     const { pathname } = location;
@@ -20,49 +31,67 @@ function ToolBar() {
     }
   }
 
+  const isStudentList = location.pathname === "/home/student";
+  const [studentSearchCondition, setStudentSearchCondition] = useAtom(
+    StudentSearchConditionAtom
+  );
+
+  const [scoreSearchCondition, setScoreSearchCondition] = useAtom(
+    scoreSearchConditionAtom
+  );
+
+  function onSearch() {
+    if (!searchString.length) {
+      toast.dismiss();
+      toast.warning("Please enter a search string");
+      return;
+    }
+
+    if (isStudentList) {
+      setStudentSearchCondition((prev) => [
+        ...prev,
+        searchString.toLowerCase(),
+      ]);
+    } else {
+      setScoreSearchCondition((prev) => [...prev, searchString.toLowerCase()]);
+    }
+
+    setSearchString("");
+  }
+
+  function onDelete(idx) {
+    if (isStudentList) {
+      setStudentSearchCondition((prev) => prev.filter((_, i) => i !== idx));
+    } else {
+      setScoreSearchCondition((prev) => prev.filter((_, i) => i !== idx));
+    }
+  }
+
   return (
     <section className="my-4 grid grid-cols-4 gap-2">
+      {/* conditon */}
       <div className="col-span-1 my-auto">
-        <div className="badge badge-soft badge-primary mx-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            className="inline-block h-4 w-4 stroke-current transition-transform transform hover:scale-150"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M6 18L18 6M6 6l12 12"
-            ></path>
-          </svg>
-          Primary
-        </div>
-        <div className="badge badge-soft badge-secondary mx-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            className="inline-block h-4 w-4 stroke-current transition-transform transform hover:scale-150"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M6 18L18 6M6 6l12 12"
-            ></path>
-          </svg>
-          Secondary
-        </div>
+        {isStudentList
+          ? studentSearchCondition.map((studentCondition, idx) => (
+              <Condition key={idx} onDelete={() => onDelete(idx)}>
+                {studentCondition}
+              </Condition>
+            ))
+          : scoreSearchCondition.map((scoreCondition, idx) => (
+              <Condition key={idx} onDelete={() => onDelete(idx)}>
+                {scoreCondition}
+              </Condition>
+            ))}
       </div>
 
+      {/* search input */}
       <div className="col-span-2 transition-transform transform hover:scale-120">
         <label className="input w-full">
           <svg
-            className="h-[1em] opacity-50 "
+            className="h-[1em] opacity-50 cursor-pointer"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
+            onClick={onSearch}
           >
             <g
               strokeLinejoin="round"
@@ -75,10 +104,17 @@ function ToolBar() {
               <path d="m21 21-4.3-4.3"></path>
             </g>
           </svg>
-          <input type="search" required placeholder="Search" />
+          <input
+            type="search"
+            required
+            placeholder="Search"
+            value={searchString}
+            onChange={(e) => setSearchString(e.target.value)}
+          />
         </label>
       </div>
 
+      {/* button */}
       <div className="col-span-1 text-center">
         {!isStudent && (
           <button className="btn btn-soft btn-primary" onClick={onClick}>
