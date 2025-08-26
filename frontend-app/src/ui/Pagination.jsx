@@ -22,4 +22,3 @@ function Pagination({ currentPage = 1, pageCount = 1 }) {
   );
 }
 export default Pagination;
--1;

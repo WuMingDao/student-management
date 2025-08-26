@@ -22,6 +22,7 @@ function StudentList() {
   const [studentList, setStudentList] = useState([]);
   const studentSearchCondition = useAtomValue(StudentSearchConditionAtom);
 
+  // filter student list for show
   const filterStudentList = studentList.filter((studentItem) => {
     if (!studentSearchCondition.length) {
       return studentList;
@@ -43,6 +44,7 @@ function StudentList() {
     return true;
   });
 
+  // for pagination
   const [searchParams, setSearchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(searchParams.get("page") || 1);
 
@@ -50,6 +52,7 @@ function StudentList() {
   const [studenCount, setStudenCount] = useState(0);
   const pageCount = Math.ceil(studenCount / pageSize);
 
+  // settup remote state success and error request handler
   const { mutate: countStudents, isPending: isCounting } = useMutation({
     mutationFn: countStudentsApi,
     onSuccess: (studentLiastData) => setStudenCount(studentLiastData),
@@ -70,16 +73,21 @@ function StudentList() {
 
   const isLoading = isCounting || isStudentListLoading;
 
+  const userId = getUserId();
+  // change state
   useEffect(() => {
-    countStudents(getUserId());
+    countStudents(userId);
   }, []);
 
+  // change state for pagination
+
+  // teach paginate page number button chang current page
   useEffect(() => {
-    const userId = getUserId();
     setSearchParams({ page: currentPage });
     getStudentListWithLimit({ userId, currentPage, pageSize });
   }, [currentPage]);
 
+  // by url search params change current page
   useEffect(() => {
     setCurrentPage(searchParams.get("page") || 1);
   }, [searchParams.get("page")]);
