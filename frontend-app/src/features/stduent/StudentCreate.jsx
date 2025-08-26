@@ -1,18 +1,18 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { useMutation } from "@tanstack/react-query";
 
-import { getTeacherById } from "../../services/apiTeacher";
-import { createStudent } from "../../services/apiStudent";
-import { signup } from "../../services/apiAuth";
+import { getTeacherById as getTeacherByIdApi } from "../../services/apiTeacher";
+import { createStudent as createStudentApi } from "../../services/apiStudent";
+import { signup as signupApi } from "../../services/apiAuth";
 
 import Loading from "../../ui/Loading";
 
-import { getConfig } from "../../utils/configHepler";
+import { getUserId } from "../../utils/userHelper";
 
 function StudentUpdate() {
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(true);
 
   const [name, setName] = useState("some name");
   const [email, setEmail] = useState("some@example.com");
@@ -22,56 +22,74 @@ function StudentUpdate() {
 
   const [teacherId, setTeacherId] = useState(null);
 
-  useEffect(() => {
-    const token = getConfig("SUPABASE_TOKEN");
-    const userToken = JSON.parse(localStorage.getItem(token));
+  // createStudent success or error
+  const { mutate: createStudent, isPending: isCreteStudent } = useMutation({
+    mutationFn: createStudentApi,
+    onSuccess: (student) => {
+      console.log("student created: ", student);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
 
-    if (!userToken) {
-      return;
-    }
-    setTeacherId(userToken.user.id);
+  // signup success or error
+  const { mutate: signup, isPending: isSignup } = useMutation({
+    mutationFn: ({ email, password, metadata }) =>
+      signupApi(email, password, metadata),
+    onSuccess: (userData) => {
+      createStudent({
+        name,
+        class: classinfo.split("|")[0],
+        grade: classinfo.split("|")[1],
+        avatar:
+          "https://img.daisyui.com/images/profile/demo/yellingcat@192.webp",
+        gender,
+        teacher_id: teacherId,
+        student_id: userData.user.id,
+      });
 
-    async function fetchData() {
-      setIsLoading(true);
-      const teachers = await getTeacherById(userToken.user.id);
+      toast.success(
+        "Student created successfully, Please to email vail your Account"
+      );
+
+      navigate("/home/student");
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  // getTeacherById success or error
+  const { mutate: getTeacherById, isPending: isGetTeacherById } = useMutation({
+    mutationFn: getTeacherByIdApi,
+    onSuccess: (teachers) => {
       const teacher = teachers[0];
 
-      // console.log(teacher);
-      // setClassInChargeArr(JSON.parse(teacher.class_in_charge));
-
-      const ClassInChargeArrData = await JSON.parse(teacher.class_in_charge);
+      const ClassInChargeArrData = JSON.parse(teacher.class_in_charge);
 
       setClassInChargeArr(ClassInChargeArrData);
       setClassinfo(ClassInChargeArrData[0]);
-      setIsLoading(false);
-    }
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
 
-    fetchData();
+  const isLoading = isSignup || isGetTeacherById || isCreteStudent;
+
+  useEffect(() => {
+    const userId = getUserId();
+    if (!userId) {
+      return;
+    }
+    setTeacherId(userId);
+
+    getTeacherById(userId);
   }, []);
 
   async function onClick() {
-    toast.loading("Loading…");
-    // sign up student to supabase
-    const userData = await signup(email, "123456", { isStudent: true });
-    // console.log(userData);
-
-    // insert student to database
-    const student = await createStudent({
-      name,
-      class: classinfo.split("|")[0],
-      grade: classinfo.split("|")[1],
-      avatar: "https://img.daisyui.com/images/profile/demo/yellingcat@192.webp",
-      gender,
-      teacher_id: teacherId,
-      student_id: userData.user.id,
-    });
-
-    console.log(student);
-
-    toast.dismiss();
-    toast.success("Student created successfully!");
-
-    navigate("/home/student");
+    signup({ email, password: "123456", metadata: { isStudent: true } });
   }
 
   return (

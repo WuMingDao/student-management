@@ -10,6 +10,7 @@ export async function createTeacher(teacher) {
 }
 
 export async function getTeacherById(teacherId) {
+  // console.log("getTeacherById: ", teacherId);
   const { data: teacher, error } = await supabase
     .from("teacher")
     .select("*")
@@ -20,5 +21,6 @@ export async function getTeacherById(teacherId) {
     throw new Error(error.message);
   }
 
+  // console.log("teacher: ", teacher);
   return teacher;
 }
