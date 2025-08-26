@@ -12,6 +12,7 @@ import { getTeacherById } from "../../services/apiTeacher";
 import { updateUser } from "../../services/apiAuth";
 import Loading from "../../ui/Loading";
 import { updateStudent } from "../../services/apiStudent";
+import { getNewImageUrl } from "../../utils/getNewImage";
 
 function Profile() {
   const [isLoading, setIsLoading] = useState(true);
@@ -53,10 +54,7 @@ function Profile() {
 
   function handleAvatarChange(event) {
     const file = event.target.files[0];
-    setAvatarFile(file);
-
-    const newUrl = URL.createObjectURL(file);
-    setCurrentAvatar(newUrl);
+    getNewImageUrl(file, setAvatarFile, setCurrentAvatar);
   }
 
   async function onClick() {

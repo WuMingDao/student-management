@@ -1,17 +1,20 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "sonner";
+import { useMutation } from "@tanstack/react-query";
 
 import { getConfig } from "../../utils/configHepler";
 
 import {
-  getStudentByStudentId,
+  getStudentByStudentId as getStudentByStudentIdAPI,
   updateStudent,
 } from "../../services/apiStudent";
 import { uploadAvatar } from "../../services/apiStorage";
+
 import Loading from "../../ui/Loading";
+import { getNewImageUrl } from "../../utils/getNewImage";
 
 function StudentEdit() {
-  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
   const [currentAvatar, setCurrentAvatar] = useState(
@@ -24,29 +27,31 @@ function StudentEdit() {
 
   const param = useParams();
 
+  // load student data from supabase
+  const { mutate: getStudentByStudentId, isPending: isGetStudentByStudentId } =
+    useMutation({
+      mutationFn: getStudentByStudentIdAPI,
+      onSuccess: (stduents) => {
+        const student = stduents[0];
+
+        setName(student.name);
+        setGender(student.gender);
+        setCurrentAvatar(student.avatar);
+      },
+      onError: (error) => {
+        toast.error(error.message);
+      },
+    });
+
+  const isLoading = isGetStudentByStudentId;
+
   useEffect(() => {
-    async function fetchData() {
-      setIsLoading(true);
-      const stduents = await getStudentByStudentId(param.id);
-      const student = stduents[0];
-
-      setName(student.name);
-      setGender(student.gender);
-      setCurrentAvatar(student.avatar);
-
-      setIsLoading(false);
-    }
-
-    fetchData();
-    // console.log(currentAvatar);
+    getStudentByStudentId(param.id);
   }, []);
 
   function handleAvatarChange(event) {
     const file = event.target.files[0];
-    setAvatarFile(file);
-
-    const newUrl = URL.createObjectURL(file);
-    setCurrentAvatar(newUrl);
+    getNewImageUrl(file, setAvatarFile, setCurrentAvatar);
   }
 
   async function onClick() {
