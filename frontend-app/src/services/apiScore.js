@@ -131,7 +131,7 @@ export async function updateScore(scoreId, updatedScore) {
 
   if (error) {
     console.log(error.messgae);
-    return;
+    throw new Error(error.message);
   }
 
   return data;

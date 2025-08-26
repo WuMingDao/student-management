@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useAtomValue } from "jotai";
 
-import ScoreListItem from "./ScoreListItem";
 import { getScoreList } from "../../services/apiScore.js";
 import {
   getStudentByStudentId,
@@ -12,11 +12,11 @@ import { isStudentAtom } from "../../atoms/user.js";
 import { scoreSearchConditionAtom } from "../../atoms/search.js";
 
 import { getUserId } from "../../utils/userHelper.js";
+import { getConfig } from "../../utils/configHepler.js";
 
+import ScoreListItem from "./ScoreListItem";
 import Loading from "../../ui/Loading";
 import Pagination from "../../ui/Pagination.jsx";
-import { useSearchParams } from "react-router-dom";
-import { getConfig } from "../../utils/configHepler.js";
 
 function ScoreList() {
   const [isLoading, setIsLoading] = useState(true);

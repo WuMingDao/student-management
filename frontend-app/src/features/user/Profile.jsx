@@ -6,13 +6,14 @@ import { isStudentAtom, userAtom } from "../../atoms/user";
 
 import { getConfig } from "../../utils/configHepler";
 import { getUserId } from "../../utils/userHelper";
+import { getNewImageUrl } from "../../utils/getNewImage";
 
 import { uploadAvatar } from "../../services/apiStorage";
 import { getTeacherById } from "../../services/apiTeacher";
-import { updateUser } from "../../services/apiAuth";
-import Loading from "../../ui/Loading";
 import { updateStudent } from "../../services/apiStudent";
-import { getNewImageUrl } from "../../utils/getNewImage";
+import { updateUser } from "../../services/apiAuth";
+
+import Loading from "../../ui/Loading";
 
 function Profile() {
   const [isLoading, setIsLoading] = useState(true);

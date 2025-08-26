@@ -55,6 +55,8 @@ function StudentEdit() {
   }
 
   async function onClick() {
+    toast.loading("Updating student profile...");
+
     const newStudent = {
       name,
       gender,
@@ -80,6 +82,9 @@ function StudentEdit() {
     const data = await updateStudent(param.id, newStudent);
 
     console.log(data);
+
+    toast.dismiss();
+    toast.success("Student avatar updated successfully");
 
     navigate("/home/student");
   }

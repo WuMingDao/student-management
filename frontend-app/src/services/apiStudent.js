@@ -8,7 +8,7 @@ export async function getStudentList(teacherId) {
 
   if (error) {
     console.error(error.message);
-    return;
+    throw new Error(error.message);
   }
 
   return student;
@@ -55,13 +55,15 @@ export async function createStudent(newStudent) {
 
   if (error) {
     console.error(error.message);
-    return;
+    throw new Error(error.message);
   }
 
   return data;
 }
 
 export async function getStudentByStudentId(studentId) {
+  console.log("studentId: ", studentId);
+
   const { data: student, error } = await supabase
     .from("student")
     .select("*")
@@ -69,9 +71,10 @@ export async function getStudentByStudentId(studentId) {
 
   if (error) {
     console.error(error.message);
-    return;
+    throw new Error(error.message);
   }
 
+  console.log("student: ", student);
   return student;
 }
 
@@ -84,7 +87,7 @@ export async function updateStudent(studentId, updatedStudent) {
 
   if (error) {
     console.error(error.message);
-    return;
+    throw new Error(error.message);
   }
 
   return data;

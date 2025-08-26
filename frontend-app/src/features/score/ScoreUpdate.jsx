@@ -1,24 +1,26 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "sonner";
+import { useMutation } from "@tanstack/react-query";
 
-import { getScoreByScoreId, updateScore } from "../../services/apiScore";
-import { getStudentByStudentId } from "../../services/apiStudent";
+import {
+  getScoreByScoreId as getScoreByScoreIdApi,
+  updateScore as updateScoreApi,
+} from "../../services/apiScore";
+import { getStudentByStudentId as getStudentByStudentIdApi } from "../../services/apiStudent";
+
 import Loading from "../../ui/Loading";
 
 function ScoreUpdate() {
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(true);
 
   const [currentStudent, setCurrentStudent] = useState({
     name: "wumingdao",
     class: "x",
     grade: "x",
   });
-  const [name, setName] = useState("wumingdao");
+
   const [studentId, setStudentId] = useState("123456789");
-  const [classNum, setClassNum] = useState("12");
-  const [grade, setGrade] = useState("1");
-  const [classinfo, setClassinfo] = useState("Class 12 | year 8");
 
   const [score, setScore] = useState(80);
   const [subject, setSubject] = useState("Math");
@@ -33,29 +35,60 @@ function ScoreUpdate() {
 
   const param = useParams();
 
+  const { mutate: getScoreByScoreId, isPending: isGetScoreByStudentId } =
+    useMutation({
+      mutationFn: getScoreByScoreIdApi,
+      onSuccess: (scores) => {
+        const scoreDate = scores[0];
+
+        console.log(scoreDate);
+
+        setScore(scoreDate.score);
+        setSubject(scoreDate.subject);
+        setSemesterYear(scoreDate.semesterYear);
+        setSemesterSeason(scoreDate.semesterSeason);
+        setStudentId(scoreDate.student_id);
+
+        getStudentByStudentId(scoreDate.student_id);
+      },
+      onError: (error) => {
+        toast.error(error.message);
+      },
+    });
+
+  const { mutate: updateScore, isPending: isUpdateScore } = useMutation({
+    mutationFn: ({ id, newScore }) => updateScoreApi(id, newScore),
+    onSuccess: (data) => {
+      console.log(data);
+
+      navigate("/home/score");
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const { mutate: getStudentByStudentId, isPending: isGetStudentByStudentId } =
+    useMutation({
+      mutationFn: getStudentByStudentIdApi,
+      onSuccess: (students) => {
+        // console.log(students);
+
+        const student = students[0];
+        setCurrentStudent(student);
+
+        console.log(student);
+      },
+      onError: (error) => {
+        toast.error(error.message);
+      },
+    });
+
+  const isLoading =
+    isGetScoreByStudentId || isGetStudentByStudentId || isUpdateScore;
+
   useEffect(() => {
-    async function fetchData() {
-      setIsLoading(true);
-      const scores = await getScoreByScoreId(param.id);
-      const scoreDate = scores[0];
-
-      console.log(scoreDate);
-
-      setScore(scoreDate.score);
-      setSubject(scoreDate.subject);
-      setSemesterYear(scoreDate.semesterYear);
-      setSemesterSeason(scoreDate.semesterSeason);
-      setStudentId(scoreDate.student_id);
-
-      const students = await getStudentByStudentId(scoreDate.student_id);
-      const student = students[0];
-      setCurrentStudent(student);
-
-      console.log(student);
-      setIsLoading(false);
-    }
-
-    fetchData();
+    getScoreByScoreId(param.id);
   }, []);
 
   async function oncClick() {
@@ -66,11 +99,7 @@ function ScoreUpdate() {
       semesterSeason,
     };
 
-    const data = await updateScore(param.id, newScore);
-
-    console.log(data);
-
-    navigate("/home/score");
+    updateScore({ id: param.id, newScore });
   }
 
   return (
@@ -87,7 +116,7 @@ function ScoreUpdate() {
               type="text"
               className="input w-full"
               value={studentId}
-              onClick={(event) => setStudentId(event.target.value)}
+              onChange={(event) => setStudentId(event.target.value)}
             />
 
             <label className="label">Class</label>

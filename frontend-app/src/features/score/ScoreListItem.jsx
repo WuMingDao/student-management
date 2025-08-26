@@ -1,5 +1,6 @@
 import { useAtomValue } from "jotai";
 import { useNavigate } from "react-router-dom";
+
 import { isStudentAtom } from "../../atoms/user";
 
 function ScoreListItem({ scoreItem, currentStudent }) {
