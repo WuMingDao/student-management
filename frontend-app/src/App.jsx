@@ -19,6 +19,7 @@ import Profile from "./features/user/Profile.jsx";
 
 import LayoutApp from "./ui/LayoutApp.jsx";
 import Home from "./pages/Home.jsx";
+import NotFound from "./ui/NotFound.jsx";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +36,7 @@ function App() {
             <Route index element={<Navigate to="/home/score" />} />
 
             <Route path="home" element={<Home />}>
+              <Route index element={<Navigate to="/home/score" />} />
               <Route path="score">
                 <Route index element={<ScoreList />} />
                 <Route path=":id" element={<ScoreUpdate />} />
@@ -55,6 +57,8 @@ function App() {
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<Signup />} />
           </Route>
+
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>
