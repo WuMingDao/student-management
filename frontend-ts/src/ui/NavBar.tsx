@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router";
+import ToggleTheme from "./ToggleTheme";
 
 function NavBar() {
   const navigate = useNavigate();
@@ -89,6 +90,7 @@ function NavBar() {
         {/* avatar */}
         <div className="navbar-end">
           {/* theme toggle */}
+          <ToggleTheme />
 
           {/* <ToggleTheme /> */}
           <div className="dropdown dropdown-end">
