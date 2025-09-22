@@ -1,4 +1,10 @@
+import { mockStudentList } from "../../services/mockData";
+import type { StudentType } from "../../types/studentType";
+import StudentListItem from "./StudentListItem";
+
 function StudentList() {
+  const studentList: StudentType[] = mockStudentList;
+
   return (
     <>
       <div className="overflow-x-auto">
@@ -16,7 +22,11 @@ function StudentList() {
               <th></th>
             </tr>
           </thead>
-          <tbody></tbody>
+          <tbody>
+            {studentList.map((studentItem) => (
+              <StudentListItem key={studentItem.id} studentItem={studentItem} />
+            ))}
+          </tbody>
         </table>
       </div>
     </>

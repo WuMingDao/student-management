@@ -53,7 +53,6 @@ function ToolBar() {
             ? "Create Student"
             : "Upload Score"}
         </button>
-        x | y
       </div>
     </section>
   );

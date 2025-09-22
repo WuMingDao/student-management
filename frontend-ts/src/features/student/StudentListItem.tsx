@@ -1,4 +1,9 @@
-function StudentListItem({ studentItem }: any) {
+import { useNavigate } from "react-router";
+import type { StudentType } from "../../types/studentType";
+
+function StudentListItem({ studentItem }: { studentItem: StudentType }) {
+  const navigate = useNavigate();
+
   return (
     <tr>
       <th>
@@ -30,7 +35,7 @@ function StudentListItem({ studentItem }: any) {
       <th>
         <button
           className="btn btn-soft btn-info"
-          //   onClick={() => navigate(`/home/student/${studentItem.student_id}`)}
+          onClick={() => navigate(`/home/student/${studentItem.student_id}`)}
         >
           detail
         </button>
