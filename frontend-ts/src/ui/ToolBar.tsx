@@ -19,6 +19,13 @@ function ToolBar() {
       {/* search input */}
       <div className="col-span-2 transition-transform transform hover:scale-120">
         <label className="input w-full">
+          <input
+            type="search"
+            required
+            placeholder="Search9"
+            // value={searchString}
+            // onChange={(e) => setSearchString(e.target.value)}
+          />
           <svg
             className="h-[1em] opacity-50 cursor-pointer"
             xmlns="http://www.w3.org/2000/svg"
@@ -36,13 +43,6 @@ function ToolBar() {
               <path d="m21 21-4.3-4.3"></path>
             </g>
           </svg>
-          <input
-            type="search"
-            required
-            placeholder="Search"
-            // value={searchString}
-            // onChange={(e) => setSearchString(e.target.value)}
-          />
         </label>
       </div>
 
