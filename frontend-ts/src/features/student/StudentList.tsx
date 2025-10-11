@@ -1,10 +1,11 @@
+import { getStudentList } from "../../services/apiStudent";
 import { mockStudentList } from "../../services/mockData";
 import type { StudentType } from "../../types/studentType";
 import StudentListItem from "./StudentListItem";
 
-function StudentList() {
-  const studentList: StudentType[] = mockStudentList;
+const studentList: StudentType[] = await getStudentList();
 
+function StudentList() {
   return (
     <>
       <div className="overflow-x-auto">

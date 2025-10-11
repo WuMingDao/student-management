@@ -7,8 +7,8 @@ export const StudentSchema = z.object({
   teacher_id: z.string(),
 
   name: z.string().min(1).max(30),
-  class: z.string().max(2),
-  grade: z.string().max(2),
+  class: z.number().max(20),
+  grade: z.number().max(20),
   gender: z.enum(["male", "female"]),
 });
 

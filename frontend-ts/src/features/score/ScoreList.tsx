@@ -1,8 +1,18 @@
+import { getScoreList } from "../../services/apiScore";
+import { getStudentList } from "../../services/apiStudent";
 import { mockScoreList, mockStudentList } from "../../services/mockData";
 import ScoreListItem from "./ScoreListItem";
 
-const MockScoreList = mockScoreList;
-const MockStudentList = mockStudentList;
+const MockScoreList = await getScoreList();
+const MockStudentList = await getStudentList();
+
+const studentScores = MockScoreList.flatMap((score) => {
+  const filteredStudent = MockStudentList.filter(
+    (student) => student.student_id === score.student_id
+  );
+
+  return filteredStudent;
+});
 
 function ScoreList() {
   return (
@@ -23,7 +33,7 @@ function ScoreList() {
               <ScoreListItem
                 key={scoreItem.id}
                 scoreItem={scoreItem}
-                currentStudent={MockStudentList[index]}
+                currentStudent={studentScores[index]}
               />
             ))}
           </tbody>
