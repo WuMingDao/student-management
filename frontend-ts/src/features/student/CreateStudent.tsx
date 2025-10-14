@@ -89,7 +89,35 @@ function CreateStudent() {
             {errors.name && <ErrorMessage>{errors.name.message}</ErrorMessage>}
           </label>
 
-          {/* <select className="select w-full" {...register("classWithGrade")}>
+          <label className="input w-full">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              className="lucide lucide-key-square-icon lucide-key-square"
+            >
+              <path d="M12.4 2.7a2.5 2.5 0 0 1 3.4 0l5.5 5.5a2.5 2.5 0 0 1 0 3.4l-3.7 3.7a2.5 2.5 0 0 1-3.4 0L8.7 9.8a2.5 2.5 0 0 1 0-3.4z" />
+              <path d="m14 7 3 3" />
+              <path d="m9.4 10.6-6.814 6.814A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814" />
+            </svg>
+            <input
+              type="password"
+              className="input"
+              placeholder="Password"
+              {...register("password")}
+            />
+            {errors.password && (
+              <ErrorMessage>{errors.password.message}</ErrorMessage>
+            )}
+          </label>
+
+          <select className="select w-full" {...register("classWithGrade")}>
             <option disabled={true}>Choose Class</option>
             {classWithGradeArray.map((item, index) => (
               <option key={index} value={item}>
@@ -102,7 +130,7 @@ function CreateStudent() {
             <option disabled={true}>Choose Gender</option>
             <option value="male">male</option>
             <option value="female">female</option>
-          </select> */}
+          </select>
 
           <button
             type="submit"
