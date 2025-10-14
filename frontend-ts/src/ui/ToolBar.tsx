@@ -1,4 +1,22 @@
+import { useLocation, useNavigate } from "react-router";
+
 function ToolBar() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  function onClick() {
+    const { pathname } = location;
+
+    console.log(pathname);
+
+    if (pathname === "/home/student") {
+      navigate("/home/student/create");
+      return;
+    } else {
+      navigate("/home/score/upload");
+    }
+  }
+
   return (
     <section className="my-4 grid grid-cols-4 gap-2">
       {/* conditon */}
@@ -48,7 +66,7 @@ function ToolBar() {
 
       {/* button */}
       <div className="col-span-1 text-center">
-        <button className="btn btn-soft btn-primary">
+        <button className="btn btn-soft btn-primary" onClick={onClick}>
           {location.pathname === "/home/student"
             ? "Create Student"
             : "Upload Score"}
