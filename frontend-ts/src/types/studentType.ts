@@ -2,7 +2,7 @@ import * as z from "zod";
 
 export const StudentSchema = z.object({
   id: z.number(),
-  avatar: z.string().url(),
+  avatar: z.string().url().optional(),
   student_id: z.string(),
   teacher_id: z.string(),
 

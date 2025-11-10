@@ -1,6 +1,6 @@
 import { supabase } from "../utils/supabase.js";
 
-export async function uploadAvatar(avatarFile: string, avatarFileName: string) {
+export async function uploadAvatar(avatarFile: File, avatarFileName: string) {
   const { error } = await supabase.storage
     .from("avatar")
     .upload(`public/${avatarFileName}`, avatarFile, {
