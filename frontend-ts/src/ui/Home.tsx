@@ -1,13 +1,15 @@
-import { Outlet } from "react-router";
+import { Outlet, useLocation } from "react-router";
 import NavBar from "./NavBar";
 import ToolBar from "./ToolBar";
 
 function Home() {
+  const location = useLocation();
+
   return (
     <>
       <NavBar />
-      <ToolBar />
-
+      {(location.pathname === "/home/score" ||
+        location.pathname === "/home/student") && <ToolBar />}
       <Outlet />
     </>
   );
