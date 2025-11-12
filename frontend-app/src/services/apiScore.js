@@ -136,12 +136,3 @@ export async function updateScore(scoreId, updatedScore) {
 
   return data;
 }
-
-export async function deleteScore(ScoreId) {
-  const { error } = await supabase.from("score").delete().eq("id", ScoreId);
-
-  if (error) {
-    console.log(error.message);
-    throw new Error(error.message);
-  }
-}
