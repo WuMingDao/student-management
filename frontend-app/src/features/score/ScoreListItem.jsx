@@ -2,6 +2,7 @@ import { useAtomValue } from "jotai";
 import { useNavigate } from "react-router-dom";
 
 import { isStudentAtom } from "../../atoms/user";
+import ScoreDelete from "./ScoreDelete";
 
 function ScoreListItem({ scoreItem, currentStudent }) {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ function ScoreListItem({ scoreItem, currentStudent }) {
           >
             detail
           </button>
-          <button className="btn btn-soft btn-error">delete</button>
+          <ScoreDelete scoreId={scoreItem.id} />
         </th>
       )}
     </tr>
