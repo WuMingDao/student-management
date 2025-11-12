@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 
 function ToggleTheme() {
-  const [currentTheme, setCurrentTheme] = useState("light");
+  const localStorageTheme = localStorage.getItem("app-theme");
+  const [currentTheme, setCurrentTheme] = useState(localStorageTheme);
 
   function toggleTheme() {
     const newTheme = currentTheme === "light" ? "dark" : "light";
@@ -10,6 +11,7 @@ function ToggleTheme() {
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", currentTheme);
+    localStorage.setItem("app-theme", currentTheme);
   }, [currentTheme]);
 
   return (
