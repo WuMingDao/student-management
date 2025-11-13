@@ -17,6 +17,8 @@ import Loading from "../../ui/Loading";
 
 function Profile() {
   const [isLoading, setIsLoading] = useState(true);
+
+  // TODO: if userAtom avatar and signup avatar not same
   const [user, setUser] = useAtom(userAtom);
   const isStudent = useAtomValue(isStudentAtom);
 
@@ -121,15 +123,18 @@ function Profile() {
             onChange={handleAvatarChange}
           />
 
-          <div className="w-3/4 mx-auto relative">
-            <label className="label">wumingdao</label>
-
-            <input
-              type="email"
-              className="input w-full"
-              value={"wumingdao"}
-              disabled
-            />
+          <div className="w-3/4 mx-auto">
+            <label className="input input-bordered flex items-center gap-2 my-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+                className="h-4 w-4 opacity-70"
+              >
+                <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
+              </svg>
+              <input type="text" className="grow" value="Alex" disabled />
+            </label>
 
             {ClassInChargeArr.length > 0 && (
               <ul className="menu bg-base-200 rounded-box w-full">

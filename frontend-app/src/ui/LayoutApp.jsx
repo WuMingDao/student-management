@@ -1,28 +1,9 @@
 import { useEffect } from "react";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+// import { Outlet, useLocation, useNavigate } from "react-router";
 import { isAutthenticated } from "../hooks/useAuth";
+import { Outlet, useLocation, useNavigate } from "react-router";
 
 function LayoutApp() {
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  useEffect(() => {
-    async function isLogin() {
-      const isAuth = await isAutthenticated();
-
-      if (!isAuth) {
-        navigate("/auth/login");
-      }
-    }
-
-    if (
-      location.pathname !== "/auth/login" &&
-      location.pathname !== "/auth/signup"
-    ) {
-      isLogin();
-    }
-  }, []);
-
   return (
     <>
       <Outlet />

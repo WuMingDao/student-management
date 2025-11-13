@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router";
 
 import { deleteScore } from "../../services/apiScore";
 import { useSetAtom } from "jotai";

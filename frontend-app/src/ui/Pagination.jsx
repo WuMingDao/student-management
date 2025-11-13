@@ -1,4 +1,4 @@
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router";
 
 function Pagination({ currentPage = 1, pageCount = 1 }) {
   const [_, setSearchParams] = useSearchParams();

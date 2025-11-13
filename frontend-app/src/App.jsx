@@ -1,8 +1,9 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import { Toaster } from "sonner";
 import { DevTools } from "jotai-devtools";
 import "jotai-devtools/styles.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { RouterProvider } from "react-router/dom";
 
 import ScoreList from "./features/score/ScoreList.jsx";
 import ScoreUpload from "./features/score/ScoreUpload.jsx";
@@ -20,6 +21,7 @@ import Profile from "./features/user/Profile.jsx";
 import LayoutApp from "./ui/LayoutApp.jsx";
 import Home from "./pages/Home.jsx";
 import NotFound from "./ui/NotFound.jsx";
+import { router } from "./Router.jsx";
 
 const queryClient = new QueryClient();
 
@@ -27,10 +29,9 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Toaster position="top-right" richColors />
-
       <DevTools />
-
-      <BrowserRouter>
+      <RouterProvider router={router} />
+      {/* <BrowserRouter>
         <Routes>
           <Route path="/" element={<LayoutApp />}>
             <Route index element={<Navigate to="/home/score" />} />
@@ -60,7 +61,7 @@ function App() {
 
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </BrowserRouter>
+      </BrowserRouter> */}
     </QueryClientProvider>
   );
 }
