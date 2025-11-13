@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { deleteScore } from "../../services/apiScore";
 import { useSetAtom } from "jotai";
@@ -7,6 +7,8 @@ import { reloadDeleteScoreAtom } from "../../atoms/reload";
 
 function ScoreDelete({ scoreId }) {
   const setReloadDeleteScore = useSetAtom(reloadDeleteScoreAtom);
+  const [searchParams] = useSearchParams();
+  const page = searchParams.get("page");
 
   const navigate = useNavigate();
 
@@ -18,7 +20,7 @@ function ScoreDelete({ scoreId }) {
       toast.dismiss(toastId);
       toast.success("Score deleted successfully!");
 
-      navigate("/home/score");
+      navigate(`/home/score?page=${page}`);
       setReloadDeleteScore(true);
     } catch (error) {
       toast.error(error.message);

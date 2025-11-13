@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 
 import { getStudentList } from "../../services/apiStudent";
@@ -8,8 +8,12 @@ import { createScore } from "../../services/apiScore";
 import Loading from "../../ui/Loading";
 
 import { getUserId } from "../../utils/userHelper";
+import { useAtomValue } from "jotai";
+import { pageParamPageScoreAtom } from "../../atoms/reload";
 
 function ScoreUpload() {
+  const page = useAtomValue(pageParamPageScoreAtom);
+
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -67,7 +71,7 @@ function ScoreUpload() {
 
     toast.dismiss(toastId);
     toast.success("Score uploaded successfully!");
-    navigate("/home/score");
+    navigate(`/home/score?page=${page}`);
   }
 
   return (

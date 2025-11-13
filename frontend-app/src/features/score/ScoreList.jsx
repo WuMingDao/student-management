@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 
 import { getScoreList } from "../../services/apiScore.js";
 import {
@@ -10,7 +10,10 @@ import {
 
 import { isStudentAtom } from "../../atoms/user.js";
 import { scoreSearchConditionAtom } from "../../atoms/search.js";
-import { reloadDeleteScoreAtom } from "../../atoms/reload.js";
+import {
+  pageParamPageScoreAtom,
+  reloadDeleteScoreAtom,
+} from "../../atoms/reload.js";
 
 import { getUserId } from "../../utils/userHelper.js";
 import { getConfig } from "../../utils/configHepler.js";
@@ -20,6 +23,7 @@ import Loading from "../../ui/Loading";
 import Pagination from "../../ui/Pagination.jsx";
 
 function ScoreList() {
+  const setPageParamPageScore = useSetAtom(pageParamPageScoreAtom);
   const [isLoading, setIsLoading] = useState(true);
   const isStudent = useAtomValue(isStudentAtom);
   const reloadDeleteScore = useAtomValue(reloadDeleteScoreAtom);
@@ -96,6 +100,7 @@ function ScoreList() {
   // by pagination number => pagination
   useEffect(() => {
     setSearchParams({ page: currentPage });
+    setPageParamPageScore(currentPage);
   }, [currentPage]);
 
   // by pagination number buttom => serachParams

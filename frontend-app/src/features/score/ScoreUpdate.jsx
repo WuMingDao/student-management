@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 
@@ -10,9 +10,13 @@ import {
 import { getStudentByStudentId as getStudentByStudentIdApi } from "../../services/apiStudent";
 
 import Loading from "../../ui/Loading";
+import { useAtomValue } from "jotai";
+import { pageParamPageScoreAtom } from "../../atoms/reload";
 
 function ScoreUpdate() {
   const navigate = useNavigate();
+
+  const page = useAtomValue(pageParamPageScoreAtom);
 
   const [currentStudent, setCurrentStudent] = useState({
     name: "wumingdao",
@@ -61,7 +65,7 @@ function ScoreUpdate() {
     onSuccess: (data) => {
       console.log(data);
 
-      navigate("/home/score");
+      navigate(`/home/score?page=${page}`);
     },
     onError: (error) => {
       toast.error(error.message);
