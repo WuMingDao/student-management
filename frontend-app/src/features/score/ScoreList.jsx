@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 
 import { getScoreList } from "../../services/apiScore.js";
 import {
@@ -10,6 +10,10 @@ import {
 
 import { isStudentAtom } from "../../atoms/user.js";
 import { scoreSearchConditionAtom } from "../../atoms/search.js";
+import {
+  pageParamPageScoreAtom,
+  reloadDeleteScoreAtom,
+} from "../../atoms/reload.js";
 
 import { getUserId } from "../../utils/userHelper.js";
 import { getConfig } from "../../utils/configHepler.js";
@@ -17,10 +21,13 @@ import { getConfig } from "../../utils/configHepler.js";
 import ScoreListItem from "./ScoreListItem";
 import Loading from "../../ui/Loading";
 import Pagination from "../../ui/Pagination.jsx";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 function ScoreList() {
-  const [isLoading, setIsLoading] = useState(true);
+  const setPageParamPageScore = useSetAtom(pageParamPageScoreAtom);
   const isStudent = useAtomValue(isStudentAtom);
+  const reloadDeleteScore = useAtomValue(reloadDeleteScoreAtom);
 
   const [ScoreList, setScoreList] = useState([]);
   const [students, setStudents] = useState([]);
@@ -57,30 +64,36 @@ function ScoreList() {
     }
   );
 
+  async function fetchDataApi(setScoreList, setStudents, isStudent) {
+    const userId = getUserId();
+
+    const ScoreListData = await getScoreList();
+    setScoreList(ScoreListData);
+
+    const studentList = isStudent
+      ? await getStudentByStudentId(userId)
+      : await getStudentList(userId);
+    setStudents(studentList);
+  }
+
+  const { mutate: fetchData, isPending: isLoginPending } = useMutation({
+    mutationFn: ({ setScoreList, setStudents, isStudent }) =>
+      fetchDataApi(setScoreList, setStudents, isStudent),
+    onSuccess: () => {
+      console.log("Data fetched successfully!");
+    },
+    onError: (error) => {
+      console.log("Error fetching data: ", error.message);
+    },
+  });
+
   useEffect(() => {
     if (isStudent === null) {
       return null;
     }
 
-    async function fetchData() {
-      setIsLoading(true);
-      const userId = getUserId();
-
-      const ScoreListData = await getScoreList();
-      setScoreList(ScoreListData);
-
-      if (!isStudent) {
-        const studentList = await getStudentList(userId);
-        setStudents(studentList);
-      } else {
-        const studentList = await getStudentByStudentId(userId);
-        setStudents(studentList);
-      }
-
-      setIsLoading(false);
-    }
-    fetchData();
-  }, [isStudent]);
+    fetchData({ setScoreList, setStudents, isStudent });
+  }, [isStudent, reloadDeleteScore]);
 
   // pagination
   const [searchParams, setSearchParams] = useSearchParams();
@@ -94,6 +107,7 @@ function ScoreList() {
   // by pagination number => pagination
   useEffect(() => {
     setSearchParams({ page: currentPage });
+    setPageParamPageScore(currentPage);
   }, [currentPage]);
 
   // by pagination number buttom => serachParams
@@ -109,8 +123,8 @@ function ScoreList() {
 
   return (
     <div>
-      {isLoading && <Loading />}
-      {!isLoading && (
+      {isLoginPending && <Loading />}
+      {!isLoginPending && (
         <>
           <div className="overflow-x-auto">
             <table className="table table-lg">

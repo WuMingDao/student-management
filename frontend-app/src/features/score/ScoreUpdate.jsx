@@ -10,9 +10,13 @@ import {
 import { getStudentByStudentId as getStudentByStudentIdApi } from "../../services/apiStudent";
 
 import Loading from "../../ui/Loading";
+import { useAtomValue } from "jotai";
+import { pageParamPageScoreAtom } from "../../atoms/reload";
 
 function ScoreUpdate() {
   const navigate = useNavigate();
+
+  const page = useAtomValue(pageParamPageScoreAtom);
 
   const [currentStudent, setCurrentStudent] = useState({
     name: "wumingdao",
@@ -61,7 +65,7 @@ function ScoreUpdate() {
     onSuccess: (data) => {
       console.log(data);
 
-      navigate("/home/score");
+      navigate(`/home/score?page=${page}`);
     },
     onError: (error) => {
       toast.error(error.message);
@@ -129,7 +133,7 @@ function ScoreUpdate() {
           </div>
 
           <div className="w-3/4 mx-auto relative">
-            <label className="label">Socre</label>
+            <label className="label">Score</label>
             <input
               type="number"
               className="input w-full"
@@ -168,7 +172,7 @@ function ScoreUpdate() {
                 value={semesterSeason}
                 onChange={(event) => setSemesterSeason(event.target.value)}
               >
-                <option disabled={true}>Choose semester eason</option>
+                <option disabled={true}>Choose semester Season</option>
                 <option value="Fall">Fall</option>
                 <option value="Spring">Spring</option>
               </select>
@@ -179,7 +183,7 @@ function ScoreUpdate() {
                 className="btn btn-soft btn-primary my-2"
                 onClick={oncClick}
               >
-                Update Socre
+                Update Score
               </button>
             </div>
           </div>
