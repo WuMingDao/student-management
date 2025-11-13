@@ -50,7 +50,7 @@ function ScoreUpload() {
   }, []);
 
   async function onClick() {
-    toast.loading("Loading…");
+    const toastId = toast.loading("Loading…");
     const newScore = {
       subject,
       semesterSeason,
@@ -65,7 +65,7 @@ function ScoreUpload() {
 
     console.log("Score: ", scores);
 
-    toast.dismiss();
+    toast.dismiss(toastId);
     toast.success("Score uploaded successfully!");
     navigate("/home/score");
   }

@@ -1,26 +1,24 @@
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
+
 import { deleteScore } from "../../services/apiScore";
-import { useAtom, useSetAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { reloadDeleteScoreAtom } from "../../atoms/reload";
-import { useEffect } from "react";
 
 function ScoreDelete({ scoreId }) {
-  const [reloadDeleteScore, setReloadDeleteScore] = useAtom(
-    reloadDeleteScoreAtom
-  );
+  const setReloadDeleteScore = useSetAtom(reloadDeleteScoreAtom);
 
-  useEffect(() => {
-    setReloadDeleteScore(false);
-  }, [reloadDeleteScore]);
+  const navigate = useNavigate();
 
   async function handleDelete() {
     try {
-      toast.loading("Deleting score...");
+      const toastId = toast.loading("Deleting score...");
       await deleteScore(scoreId);
 
-      toast.dismiss();
+      toast.dismiss(toastId);
       toast.success("Score deleted successfully!");
 
+      navigate("/home/score");
       setReloadDeleteScore(true);
     } catch (error) {
       toast.error(error.message);
@@ -32,11 +30,13 @@ function ScoreDelete({ scoreId }) {
       {/* Open the modal using document.getElementById('ID').showModal() method */}
       <button
         className="btn btn-soft btn-error"
-        onClick={() => document.getElementById("my_modal_1").showModal()}
+        onClick={() =>
+          document.getElementById(`delete_modal_${scoreId}`).showModal()
+        }
       >
         delete
       </button>
-      <dialog id="my_modal_1" className="modal">
+      <dialog id={`delete_modal_${scoreId}`} className="modal">
         <div className="modal-box">
           <p className="py-4 text-center text-red-600">
             Press again confirm to delete the score.

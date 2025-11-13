@@ -10,6 +10,7 @@ import {
 
 import { isStudentAtom } from "../../atoms/user.js";
 import { scoreSearchConditionAtom } from "../../atoms/search.js";
+import { reloadDeleteScoreAtom } from "../../atoms/reload.js";
 
 import { getUserId } from "../../utils/userHelper.js";
 import { getConfig } from "../../utils/configHepler.js";
@@ -21,6 +22,7 @@ import Pagination from "../../ui/Pagination.jsx";
 function ScoreList() {
   const [isLoading, setIsLoading] = useState(true);
   const isStudent = useAtomValue(isStudentAtom);
+  const reloadDeleteScore = useAtomValue(reloadDeleteScoreAtom);
 
   const [ScoreList, setScoreList] = useState([]);
   const [students, setStudents] = useState([]);
@@ -80,7 +82,7 @@ function ScoreList() {
       setIsLoading(false);
     }
     fetchData();
-  }, [isStudent]);
+  }, [isStudent, reloadDeleteScore]);
 
   // pagination
   const [searchParams, setSearchParams] = useSearchParams();

@@ -129,7 +129,7 @@ function ScoreUpdate() {
           </div>
 
           <div className="w-3/4 mx-auto relative">
-            <label className="label">Socre</label>
+            <label className="label">Score</label>
             <input
               type="number"
               className="input w-full"
