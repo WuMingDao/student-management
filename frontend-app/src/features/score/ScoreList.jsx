@@ -26,7 +26,6 @@ import { toast } from "sonner";
 
 function ScoreList() {
   const setPageParamPageScore = useSetAtom(pageParamPageScoreAtom);
-  const [isLoading, setIsLoading] = useState(true);
   const isStudent = useAtomValue(isStudentAtom);
   const reloadDeleteScore = useAtomValue(reloadDeleteScoreAtom);
 
@@ -71,13 +70,10 @@ function ScoreList() {
     const ScoreListData = await getScoreList();
     setScoreList(ScoreListData);
 
-    if (!isStudent) {
-      const studentList = await getStudentList(userId);
-      setStudents(studentList);
-    } else {
-      const studentList = await getStudentByStudentId(userId);
-      setStudents(studentList);
-    }
+    const studentList = isStudent
+      ? await getStudentByStudentId(userId)
+      : await getStudentList(userId);
+    setStudents(studentList);
   }
 
   const { mutate: fetchData, isPending: isLoginPending } = useMutation({
