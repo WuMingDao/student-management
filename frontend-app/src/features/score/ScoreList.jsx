@@ -21,6 +21,8 @@ import { getConfig } from "../../utils/configHepler.js";
 import ScoreListItem from "./ScoreListItem";
 import Loading from "../../ui/Loading";
 import Pagination from "../../ui/Pagination.jsx";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 function ScoreList() {
   const setPageParamPageScore = useSetAtom(pageParamPageScoreAtom);
@@ -63,29 +65,38 @@ function ScoreList() {
     }
   );
 
+  async function fetchDataApi(setScoreList, setStudents, isStudent) {
+    const userId = getUserId();
+
+    const ScoreListData = await getScoreList();
+    setScoreList(ScoreListData);
+
+    if (!isStudent) {
+      const studentList = await getStudentList(userId);
+      setStudents(studentList);
+    } else {
+      const studentList = await getStudentByStudentId(userId);
+      setStudents(studentList);
+    }
+  }
+
+  const { mutate: fetchData, isPending: isLoginPending } = useMutation({
+    mutationFn: ({ setScoreList, setStudents, isStudent }) =>
+      fetchDataApi(setScoreList, setStudents, isStudent),
+    onSuccess: () => {
+      console.log("Data fetched successfully!");
+    },
+    onError: (error) => {
+      console.log("Error fetching data: ", error.message);
+    },
+  });
+
   useEffect(() => {
     if (isStudent === null) {
       return null;
     }
 
-    async function fetchData() {
-      setIsLoading(true);
-      const userId = getUserId();
-
-      const ScoreListData = await getScoreList();
-      setScoreList(ScoreListData);
-
-      if (!isStudent) {
-        const studentList = await getStudentList(userId);
-        setStudents(studentList);
-      } else {
-        const studentList = await getStudentByStudentId(userId);
-        setStudents(studentList);
-      }
-
-      setIsLoading(false);
-    }
-    fetchData();
+    fetchData({ setScoreList, setStudents, isStudent });
   }, [isStudent, reloadDeleteScore]);
 
   // pagination
@@ -116,8 +127,8 @@ function ScoreList() {
 
   return (
     <div>
-      {isLoading && <Loading />}
-      {!isLoading && (
+      {isLoginPending && <Loading />}
+      {!isLoginPending && (
         <>
           <div className="overflow-x-auto">
             <table className="table table-lg">

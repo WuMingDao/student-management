@@ -10,13 +10,12 @@ import Loading from "../../ui/Loading";
 import { getUserId } from "../../utils/userHelper";
 import { useAtomValue } from "jotai";
 import { pageParamPageScoreAtom } from "../../atoms/reload";
+import { useMutation } from "@tanstack/react-query";
 
 function ScoreUpload() {
   const page = useAtomValue(pageParamPageScoreAtom);
 
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(true);
-
   const [score, setScore] = useState(80);
   const [subject, setSubject] = useState("Math");
 
@@ -36,21 +35,27 @@ function ScoreUpload() {
     (_, index) => index + 2000
   );
 
+  async function fetchDataApi(setStudents) {
+    const userId = getUserId();
+
+    const studentList = await getStudentList(userId);
+    setCurrentStudent(studentList[0]);
+    setStudents(studentList);
+  }
+
+  const { mutate: fetchData, isPending: isLoginPending } = useMutation({
+    mutationFn: ({ setStudents }) => fetchDataApi(setStudents),
+    onSuccess: () => {
+      console.log("Data fetched successfully!");
+    },
+    onError: (error) => {
+      console.log("Error fetching data: ", error.message);
+    },
+  });
+
   // read all student for teacher
   useEffect(() => {
-    async function fetchData() {
-      setIsLoading(true);
-      const userId = getUserId();
-
-      const studentList = await getStudentList(userId);
-      setCurrentStudent(studentList[0]);
-      setStudents(studentList);
-
-      // console.log("Student list: ", studentList[0]);
-      setIsLoading(false);
-    }
-
-    fetchData();
+    fetchData({ setStudents });
   }, []);
 
   async function onClick() {
@@ -76,8 +81,8 @@ function ScoreUpload() {
 
   return (
     <div>
-      {isLoading && <Loading />}
-      {!isLoading && (
+      {isLoginPending && <Loading />}
+      {!isLoginPending && (
         <fieldset className="fieldset bg-base-200 border-base-300 rounded-box border p-4 w-1/3 mx-auto shadow-2xl shadow-blue-300 mt-40">
           <h1 className="text-center text-2xl pt-4">wumingdao</h1>
 
