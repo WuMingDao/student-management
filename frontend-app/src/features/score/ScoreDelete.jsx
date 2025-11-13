@@ -8,21 +8,23 @@ import { reloadDeleteScoreAtom } from "../../atoms/reload";
 function ScoreDelete({ scoreId }) {
   const setReloadDeleteScore = useSetAtom(reloadDeleteScoreAtom);
   const [searchParams] = useSearchParams();
-  const page = searchParams.get("page");
+  const page = searchParams.get("page") || 1;
 
   const navigate = useNavigate();
 
   async function handleDelete() {
+    const toastId = toast.loading("Deleting score...");
+
     try {
-      const toastId = toast.loading("Deleting score...");
       await deleteScore(scoreId);
 
       toast.dismiss(toastId);
       toast.success("Score deleted successfully!");
 
       navigate(`/home/score?page=${page}`);
-      setReloadDeleteScore(true);
+      setReloadDeleteScore((prev) => !prev);
     } catch (error) {
+      toast.dismiss(toastId);
       toast.error(error.message);
     }
   }
