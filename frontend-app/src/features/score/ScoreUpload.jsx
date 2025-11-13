@@ -124,7 +124,7 @@ function ScoreUpload() {
               disabled
             />
 
-            <label className="label">Socre</label>
+            <label className="label">Score</label>
             <input
               type="number"
               className="input w-full"
@@ -163,7 +163,7 @@ function ScoreUpload() {
                 value={semesterSeason}
                 onChange={(event) => setSemesterSeason(event.target.value)}
               >
-                <option disabled={true}>Choose semester eason</option>
+                <option disabled={true}>Choose semester Season</option>
                 <option value="Fall">Fall</option>
                 <option value="Spring">Spring</option>
               </select>
