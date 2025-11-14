@@ -1,11 +1,11 @@
-import { use, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import { toast } from "sonner";
 
-import { getTeacherById as getTeacherByIdApi } from "../../services/apiTeacher";
-import { createStudent as createStudentApi } from "../../services/apiStudent";
 import { signup as signupApi } from "../../services/apiAuth";
+import { createStudent as createStudentApi } from "../../services/apiStudent";
+import { getTeacherById as getTeacherByIdApi } from "../../services/apiTeacher";
 
 import Loading from "../../ui/Loading";
 
