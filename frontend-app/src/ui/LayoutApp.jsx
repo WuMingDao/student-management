@@ -1,7 +1,5 @@
-import { useEffect } from "react";
 // import { Outlet, useLocation, useNavigate } from "react-router";
-import { isAutthenticated } from "../hooks/useAuth";
-import { Outlet, useLocation, useNavigate } from "react-router";
+import { Outlet } from "react-router";
 
 function LayoutApp() {
   return (

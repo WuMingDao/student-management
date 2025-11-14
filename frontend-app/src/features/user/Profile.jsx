@@ -1,17 +1,17 @@
+import { useAtom, useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-import { useAtom, useAtomValue } from "jotai";
 import { isStudentAtom, userAtom } from "../../atoms/user";
 
 import { getConfig } from "../../utils/configHepler";
-import { getUserId } from "../../utils/userHelper";
 import { getNewImageUrl } from "../../utils/getNewImage";
+import { getUserId } from "../../utils/userHelper";
 
-import { uploadAvatar } from "../../services/apiStorage";
-import { getTeacherById } from "../../services/apiTeacher";
-import { updateStudent } from "../../services/apiStudent";
 import { updateUser } from "../../services/apiAuth";
+import { uploadAvatar } from "../../services/apiStorage";
+import { updateStudent } from "../../services/apiStudent";
+import { getTeacherById } from "../../services/apiTeacher";
 
 import Loading from "../../ui/Loading";
 
