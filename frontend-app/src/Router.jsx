@@ -1,17 +1,17 @@
 import { createBrowserRouter, Navigate, redirect } from "react-router";
-import LayoutApp from "./ui/LayoutApp";
-import Home from "./pages/Home";
-import NotFound from "./ui/NotFound";
 import Login from "./features/auth/Login";
 import Signup from "./features/auth/Signup";
 import ScoreList from "./features/score/ScoreList";
 import ScoreUpdate from "./features/score/ScoreUpdate";
 import ScoreUpload from "./features/score/ScoreUpload";
-import StudentList from "./features/stduent/StudentList";
-import StudentEdit from "./features/stduent/StudentEdit";
 import StudentCreate from "./features/stduent/StudentCreate";
+import StudentEdit from "./features/stduent/StudentEdit";
+import StudentList from "./features/stduent/StudentList";
 import Profile from "./features/user/Profile";
 import { isAutthenticated } from "./hooks/useAuth";
+import Home from "./pages/Home";
+import LayoutApp from "./ui/LayoutApp";
+import NotFound from "./ui/NotFound";
 
 const protectedLoader = async () => {
   const isAuth = await isAutthenticated();
