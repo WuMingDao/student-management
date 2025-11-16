@@ -1,64 +1,23 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
-import * as yup from "yup";
 
-import { signup as signupAPI } from "../../services/apiAuth.js";
-import { createTeacher as createTeacherApi } from "../../services/apiTeacher.js";
+import { useNavigate } from "react-router";
+import { useSignup } from "../../hooks/useSignup.js";
 import ErrorMessage from "../../ui/ErrorMessage.jsx";
+import { signupValidationSchema } from "../../utils/validationSchemas.js";
 
 function Signup() {
   const navigate = useNavigate();
-
-  // create tearcer user to supabase user
-  const { mutate: createTeacher, isPending: isCreatingTeacher } = useMutation({
-    mutationFn: createTeacherApi,
-    onSuccess: () => {
-      toast.success("Signup successful, Please comfirm your email");
-      navigate("/auth/login");
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-
-  // insert teacher user to supabase table
-  const { mutate: signup, isPending: isSigningUp } = useMutation({
-    mutationFn: ({ email, password }) => signupAPI(email, password),
-    onSuccess: (userData) => {
-      createTeacher({ teacher_id: userData.user.id });
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-
-  const isLoading = isCreatingTeacher || isSigningUp;
-
-  //  vail form handle
-  const Validationschema = yup
-    .object({
-      email: yup.string().required().email(),
-      password: yup.string().required().min(6),
-      confirmPassword: yup
-        .string()
-        .required()
-        .min(6)
-        .oneOf([yup.ref("password")], "Passwords must match"),
-    })
-    .required();
-
-  // settip form vail
+  // setup form vail
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(Validationschema),
+    resolver: yupResolver(signupValidationSchema),
   });
+
+  const { isLoading, signup } = useSignup();
 
   function onSubmit({ email, password }) {
     signup({ email, password });

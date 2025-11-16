@@ -1,44 +1,24 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
-import * as yup from "yup";
+import { useNavigate } from "react-router";
 
-import { login as loginAPi } from "../../services/apiAuth.js";
+import { useLogin } from "../../hooks/useLogin.js";
 import ErrorMessage from "../../ui/ErrorMessage.jsx";
+import { loginValidationSchema } from "../../utils/validationSchemas.js";
 
 function Login() {
   const navigate = useNavigate();
 
-  // login after success or error
-  const { mutate: login, isPending: isLoginPending } = useMutation({
-    mutationFn: ({ email, password }) => loginAPi(email, password),
-    onSuccess: () => {
-      toast.success("Login success!");
-      navigate("/");
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-
-  // vail form handle
-  const Validationschema = yup
-    .object({
-      email: yup.string().required().email(),
-      password: yup.string().required().min(6),
-    })
-    .required();
-
-  // settip form vail
+  // setup form vail
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(Validationschema),
+    resolver: yupResolver(loginValidationSchema),
   });
+
+  const { login, isLoginPending } = useLogin();
 
   // handle submit form to login
   async function onSubmit({ email, password }) {
@@ -50,7 +30,7 @@ function Login() {
       <fieldset className="fieldset bg-base-200 border-base-300 rounded-box border p-4 w-1/3 mx-auto shadow-2xl shadow-blue-300 mt-40">
         <h1 className="text-center text-2xl">SunShine</h1>
 
-        {/* type eamil for login */}
+        {/* type email for login */}
         <div className="w-3/4 mx-auto relative">
           <label className="label">Email</label>
           <input
