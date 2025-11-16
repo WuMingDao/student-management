@@ -1,9 +1,9 @@
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
-import { useNavigate, useSearchParams } from "react-router";
 
-import { deleteScore } from "../../services/apiScore";
 import { useSetAtom } from "jotai";
 import { reloadDeleteScoreAtom } from "../../atoms/reload";
+import { deleteScore } from "../../services/apiScore";
 
 function ScoreDelete({ scoreId }) {
   const setReloadDeleteScore = useSetAtom(reloadDeleteScoreAtom);

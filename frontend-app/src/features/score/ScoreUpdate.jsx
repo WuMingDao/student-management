@@ -1,7 +1,7 @@
+import { useMutation } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
-import { useMutation } from "@tanstack/react-query";
 
 import {
   getScoreByScoreId as getScoreByScoreIdApi,
@@ -9,9 +9,9 @@ import {
 } from "../../services/apiScore";
 import { getStudentByStudentId as getStudentByStudentIdApi } from "../../services/apiStudent";
 
-import Loading from "../../ui/Loading";
 import { useAtomValue } from "jotai";
 import { pageParamPageScoreAtom } from "../../atoms/reload";
+import Loading from "../../ui/Loading";
 
 function ScoreUpdate() {
   const navigate = useNavigate();
