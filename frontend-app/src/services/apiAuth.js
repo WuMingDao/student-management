@@ -8,7 +8,7 @@ export async function signup(email, password, metadata = {}) {
       data: {
         display_name: `${email}-${Date.now()}`,
         avatar:
-          "https://img.daisyui.com/images/profile/demo/batperson@192.webp",
+          "https://img.daisyui.com/images/profile/demo/yellingcat@192.webp",
         ...metadata,
       },
     },

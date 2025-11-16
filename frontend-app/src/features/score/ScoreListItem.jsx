@@ -1,5 +1,5 @@
 import { useAtomValue } from "jotai";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 import { isStudentAtom } from "../../atoms/user";
 import ScoreDelete from "./ScoreDelete";

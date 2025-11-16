@@ -27,40 +27,8 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Toaster position="top-right" richColors />
-
       <DevTools />
-
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<LayoutApp />}>
-            <Route index element={<Navigate to="/home/score" />} />
-
-            <Route path="home" element={<Home />}>
-              <Route index element={<Navigate to="/home/score" />} />
-              <Route path="score">
-                <Route index element={<ScoreList />} />
-                <Route path=":id" element={<ScoreUpdate />} />
-                <Route path="upload" element={<ScoreUpload />} />
-              </Route>
-
-              <Route path="student">
-                <Route index element={<StudentList />} />
-                <Route path=":id" element={<StudentEdit />} />
-                <Route path="create" element={<StudentCreate />} />
-              </Route>
-
-              <Route path="profile" element={<Profile />} />
-            </Route>
-          </Route>
-
-          <Route path="auth">
-            <Route path="login" element={<Login />} />
-            <Route path="signup" element={<Signup />} />
-          </Route>
-
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <RouterProvider router={router} />
     </QueryClientProvider>
   );
 }
