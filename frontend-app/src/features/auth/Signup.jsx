@@ -1,40 +1,20 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import * as yup from "yup";
 
 import { useNavigate } from "react-router";
 import { useSignup } from "../../hooks/useSignup.js";
 import ErrorMessage from "../../ui/ErrorMessage.jsx";
+import { signupValidationSchema } from "../../utils/validationSchemas.js";
 
 function Signup() {
   const navigate = useNavigate();
-
-  //  vail form handle
-  const Validationschema = yup
-    .object({
-      email: yup
-        .string()
-        .required("email not for empty")
-        .email("Please type vail email"),
-      password: yup
-        .string("password not for empty")
-        .required()
-        .min(6, "password must be at least 6 characters"),
-      confirmPassword: yup
-        .string()
-        .required()
-        .min(6)
-        .oneOf([yup.ref("password")], "Passwords must match"),
-    })
-    .required();
-
   // setup form vail
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(Validationschema),
+    resolver: yupResolver(signupValidationSchema),
   });
 
   const { isLoading, signup } = useSignup();
