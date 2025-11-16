@@ -1,6 +1,6 @@
+import { useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useAtomValue, useSetAtom } from "jotai";
 
 import { getScoreList } from "../../services/apiScore.js";
 import {
@@ -8,21 +8,20 @@ import {
   getStudentList,
 } from "../../services/apiStudent.js";
 
-import { isStudentAtom } from "../../atoms/user.js";
-import { scoreSearchConditionAtom } from "../../atoms/search.js";
 import {
   pageParamPageScoreAtom,
   reloadDeleteScoreAtom,
 } from "../../atoms/reload.js";
+import { scoreSearchConditionAtom } from "../../atoms/search.js";
+import { isStudentAtom } from "../../atoms/user.js";
 
-import { getUserId } from "../../utils/userHelper.js";
 import { getConfig } from "../../utils/configHepler.js";
+import { getUserId } from "../../utils/userHelper.js";
 
-import ScoreListItem from "./ScoreListItem";
+import { useMutation } from "@tanstack/react-query";
 import Loading from "../../ui/Loading";
 import Pagination from "../../ui/Pagination.jsx";
-import { useMutation } from "@tanstack/react-query";
-import { toast } from "sonner";
+import ScoreListItem from "./ScoreListItem";
 
 function ScoreList() {
   const setPageParamPageScore = useSetAtom(pageParamPageScoreAtom);

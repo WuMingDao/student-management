@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-import { getStudentList } from "../../services/apiStudent";
 import { createScore } from "../../services/apiScore";
+import { getStudentList } from "../../services/apiStudent";
 
 import Loading from "../../ui/Loading";
 
-import { getUserId } from "../../utils/userHelper";
+import { useMutation } from "@tanstack/react-query";
 import { useAtomValue } from "jotai";
 import { pageParamPageScoreAtom } from "../../atoms/reload";
-import { useMutation } from "@tanstack/react-query";
+import { getUserId } from "../../utils/userHelper";
 
 function ScoreUpload() {
   const page = useAtomValue(pageParamPageScoreAtom);

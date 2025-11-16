@@ -1,4 +1,3 @@
-import { getConfig } from "../utils/configHepler";
 import { supabase } from "../utils/supabase";
 
 export async function signup(email, password, metadata = {}) {
