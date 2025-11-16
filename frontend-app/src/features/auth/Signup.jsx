@@ -1,9 +1,9 @@
-import { useNavigate } from "react-router";
-import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import * as yup from "yup";
 
 import { signup as signupAPI } from "../../services/apiAuth.js";
 import { createTeacher as createTeacherApi } from "../../services/apiTeacher.js";

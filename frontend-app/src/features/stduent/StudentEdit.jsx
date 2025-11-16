@@ -1,15 +1,15 @@
+import { useMutation } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
-import { useMutation } from "@tanstack/react-query";
 
 import { getConfig } from "../../utils/configHepler";
 
+import { uploadAvatar } from "../../services/apiStorage";
 import {
   getStudentByStudentId as getStudentByStudentIdAPI,
   updateStudent,
 } from "../../services/apiStudent";
-import { uploadAvatar } from "../../services/apiStorage";
 
 import Loading from "../../ui/Loading";
 import { getNewImageUrl } from "../../utils/getNewImage";
