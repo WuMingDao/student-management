@@ -10,6 +10,7 @@ import StudentList from "./features/stduent/StudentList";
 import Profile from "./features/user/Profile";
 import { isAutthenticated } from "./hooks/useAuth";
 import Home from "./pages/Home";
+import HomeLayoutWithToolbar from "./ui/HomeLayoutWithToolbar";
 import LayoutApp from "./ui/LayoutApp";
 import NotFound from "./ui/NotFound";
 
@@ -35,19 +36,24 @@ export const router = createBrowserRouter([
         Component: Home,
         children: [
           {
-            path: "score",
+            Component: HomeLayoutWithToolbar,
             children: [
-              { index: true, Component: ScoreList },
-              { path: ":id", Component: ScoreUpdate },
-              { path: "upload", Component: ScoreUpload },
-            ],
-          },
-          {
-            path: "student",
-            children: [
-              { index: true, Component: StudentList },
-              { path: ":id", Component: StudentEdit },
-              { path: "create", Component: StudentCreate },
+              {
+                path: "score",
+                children: [
+                  { index: true, Component: ScoreList },
+                  { path: ":id", Component: ScoreUpdate },
+                  { path: "upload", Component: ScoreUpload },
+                ],
+              },
+              {
+                path: "student",
+                children: [
+                  { index: true, Component: StudentList },
+                  { path: ":id", Component: StudentEdit },
+                  { path: "create", Component: StudentCreate },
+                ],
+              },
             ],
           },
           {
