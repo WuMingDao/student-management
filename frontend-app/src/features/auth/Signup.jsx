@@ -1,47 +1,25 @@
-import { useNavigate } from "react-router";
-import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
 import * as yup from "yup";
-import { toast } from "sonner";
-import { useMutation } from "@tanstack/react-query";
 
-import { signup as signupAPI } from "../../services/apiAuth.js";
-import { createTeacher as createTeacherApi } from "../../services/apiTeacher.js";
+import { useNavigate } from "react-router";
+import { useSignup } from "../../hooks/useSignup.js";
 import ErrorMessage from "../../ui/ErrorMessage.jsx";
 
 function Signup() {
   const navigate = useNavigate();
 
-  // create tearcer user to supabase user
-  const { mutate: createTeacher, isPending: isCreatingTeacher } = useMutation({
-    mutationFn: createTeacherApi,
-    onSuccess: () => {
-      toast.success("Signup successful, Please comfirm your email");
-      navigate("/auth/login");
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-
-  // insert teacher user to supabase table
-  const { mutate: signup, isPending: isSigningUp } = useMutation({
-    mutationFn: ({ email, password }) => signupAPI(email, password),
-    onSuccess: (userData) => {
-      createTeacher({ teacher_id: userData.user.id });
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-
-  const isLoading = isCreatingTeacher || isSigningUp;
-
   //  vail form handle
   const Validationschema = yup
     .object({
-      email: yup.string().required().email(),
-      password: yup.string().required().min(6),
+      email: yup
+        .string()
+        .required("email not for empty")
+        .email("Please type vail email"),
+      password: yup
+        .string("password not for empty")
+        .required()
+        .min(6, "password must be at least 6 characters"),
       confirmPassword: yup
         .string()
         .required()
@@ -50,15 +28,16 @@ function Signup() {
     })
     .required();
 
-  // settip form vail
+  // setup form vail
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(Validationschema),
   });
+
+  const { isLoading, signup } = useSignup();
 
   function onSubmit({ email, password }) {
     signup({ email, password });

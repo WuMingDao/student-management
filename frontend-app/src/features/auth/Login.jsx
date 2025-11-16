@@ -1,9 +1,9 @@
-import { useNavigate } from "react-router";
-import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
+import { toast } from "sonner";
+import * as yup from "yup";
 
 import { login as loginAPi } from "../../services/apiAuth.js";
 import ErrorMessage from "../../ui/ErrorMessage.jsx";
@@ -50,7 +50,7 @@ function Login() {
       <fieldset className="fieldset bg-base-200 border-base-300 rounded-box border p-4 w-1/3 mx-auto shadow-2xl shadow-blue-300 mt-40">
         <h1 className="text-center text-2xl">SunShine</h1>
 
-        {/* type eamil for login */}
+        {/* type email for login */}
         <div className="w-3/4 mx-auto relative">
           <label className="label">Email</label>
           <input
