@@ -1,9 +1,0 @@
-{
-  "extends": "@tsconfig/node-lts",
-  "compilerOptions": {
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "noEmit": true
-  }
-}
